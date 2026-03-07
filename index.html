@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Calculadora de Obras Ágil</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet" />
+    <style>
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .tab-active {
+            background: #1e3a5f;
+            color: #fff;
+            border-bottom: 3px solid #f59e0b;
+        }
+
+        .tab-inactive {
+            background: #f1f5f9;
+            color: #475569;
+        }
+
+        .tab-inactive:hover {
+            background: #e2e8f0;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+
+        .result-card {
+            animation: fadeIn .3s ease;
+        }
+
+        .gradient-header {
+            background: linear-gradient(135deg, #0f2744 0%, #1e3a5f 60%, #1a5276 100%);
+        }
+
+        .cost-badge {
+            background: linear-gradient(135deg, #065f46, #047857);
+        }
+
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+
+            body {
+                background: white;
+            }
+        }
+    </style>
+</head>
+
+<body class="bg-slate-100 min-h-screen">
+
+    <!-- HEADER -->
+    <header class="gradient-header text-white py-6 px-4 shadow-xl">
+        <div class="max-w-5xl mx-auto flex items-center gap-4">
+            <div class="bg-amber-400 rounded-xl p-3 shadow-lg">
+                <svg class="w-8 h-8 text-slate-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-2 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                </svg>
+            </div>
+            <div>
+                <h1 class="text-2xl font-bold tracking-tight">Calculadora de Obras Ágil</h1>
+                <p class="text-slate-300 text-sm">Estimativa de materiais e custos com margem de 10% de perda</p>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-4 py-6">
+
+        <!-- TABS -->
+        <div class="no-print flex flex-wrap gap-1 mb-6 bg-white rounded-2xl p-2 shadow-md">
+            <button onclick="showTab('alvenaria')" id="tab-alvenaria"
+                class="tab-active flex-1 min-w-[100px] py-3 px-1 rounded-xl text-xs font-semibold transition-all">🧱
+                Alvenaria</button>
+            <button onclick="showTab('reboco')" id="tab-reboco"
+                class="tab-inactive flex-1 min-w-[100px] py-3 px-1 rounded-xl text-xs font-semibold transition-all">🪣
+                Reboco</button>
+            <button onclick="showTab('concreto')" id="tab-concreto"
+                class="tab-inactive flex-1 min-w-[100px] py-3 px-1 rounded-xl text-xs font-semibold transition-all">🏗️
+                Concreto</button>
+            <button onclick="showTab('piso')" id="tab-piso"
+                class="tab-inactive flex-1 min-w-[100px] py-3 px-1 rounded-xl text-xs font-semibold transition-all">🔲
+                Piso</button>
+            <button onclick="showTab('pintura')" id="tab-pintura"
+                class="tab-inactive flex-1 min-w-[100px] py-3 px-1 rounded-xl text-xs font-semibold transition-all">🎨
+                Pintura</button>
+        </div>
+
+        <!-- =================== ALVENARIA =================== -->
+        <section id="sec-alvenaria" class="section-panel">
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-white rounded-2xl shadow-md p-6 space-y-4">
+                    <h2 class="text-lg font-bold text-slate-800">🧱 Dados da Alvenaria</h2>
+                    <div>
+                        <label class="lbl">Comprimento da parede (m)</label>
+                        <input type="number" id="alv-comp" min="0" step="0.01" placeholder="Ex: 10"
+                            oninput="calcAlvenaria()" class="inp" />
+                    </div>
+                    <div>
+                        <label class="lbl">Altura da parede (m)</label>
+                        <input type="number" id="alv-alt" min="0" step="0.01" placeholder="Ex: 2.8"
+                            oninput="calcAlvenaria()" class="inp" />
+                    </div>
+                    <div>
+                        <label class="lbl">Tipo de tijolo</label>
+                        <select id="alv-tipo" onchange="calcAlvenaria()" class="inp bg-white">
+                            <option value="ceramico6">Cerâmico 6 furos (19x9x9cm) — ~35 tj/m²</option>
+                            <option value="ceramico8">Cerâmico 8 furos (19x19x9cm) — ~20 tj/m²</option>
+                            <option value="macico">Tijolo Maciço (19x9x5cm) — ~65 tj/m²</option>
+                            <option value="bloco_concreto">Bloco de Concreto — ~13 bl/m²</option>
+                        </select>
+                    </div>
+                    <div class="border-t border-slate-100 pt-4">
+                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">💰 Preços Unitários
+                            (R$)</p>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div><label class="lbl">Tijolo (por unid.)</label><input type="number" id="alv-p-tj" min="0"
+                                    step="0.01" placeholder="0,00" oninput="calcAlvenaria()" class="inp" /></div>
+                            <div><label class="lbl">Cimento (saco 50kg)</label><input type="number" id="alv-p-cim"
+                                    min="0" step="0.01" placeholder="0,00" oninput="calcAlvenaria()" class="inp" />
+                            </div>
+                            <div><label class="lbl">Areia (m³)</label><input type="number" id="alv-p-areia" min="0"
+                                    step="0.01" placeholder="0,00" oninput="calcAlvenaria()" class="inp" /></div>
+                        </div>
+                    </div>
+                    <div class="bg-amber-50 border border-amber-200 rounded-xl p-3">
+                        <p class="text-xs text-amber-700 font-medium">ℹ️ Traço 1:3 (cimento:areia). Margem de 10%
+                            aplicada.</p>
+                    </div>
+                </div>
+                <div id="res-alvenaria" class="bg-white rounded-2xl shadow-md p-6 flex items-center justify-center">
+                    <p class="text-slate-400 text-center text-sm">Preencha os dados ao lado para ver os resultados.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- =================== REBOCO =================== -->
+        <section id="sec-reboco" class="section-panel hidden">
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-white rounded-2xl shadow-md p-6 space-y-4">
+                    <h2 class="text-lg font-bold text-slate-800">🪣 Reboco / Chapisco</h2>
+                    <div>
+                        <label class="lbl">Área total (m²)</label>
+                        <input type="number" id="reb-area" min="0" step="0.01" placeholder="Ex: 50"
+                            oninput="calcReboco()" class="inp" />
+                    </div>
+                    <div>
+                        <label class="lbl">Tipo de serviço</label>
+                        <select id="reb-tipo" onchange="calcReboco()" class="inp bg-white">
+                            <option value="chapisco">Chapisco (traço 1:3)</option>
+                            <option value="reboco">Reboco interno (traço 1:2:9)</option>
+                            <option value="emboco">Emboço externo (traço 1:1:6)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="lbl">Espessura (cm)</label>
+                        <input type="number" id="reb-esp" min="0.5" step="0.5" value="2" oninput="calcReboco()"
+                            class="inp" />
+                    </div>
+                    <div class="border-t border-slate-100 pt-4">
+                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">💰 Preços Unitários
+                            (R$)</p>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div><label class="lbl">Cimento (saco 50kg)</label><input type="number" id="reb-p-cim"
+                                    min="0" step="0.01" placeholder="0,00" oninput="calcReboco()" class="inp" /></div>
+                            <div><label class="lbl">Cal (saco 20kg)</label><input type="number" id="reb-p-cal" min="0"
+                                    step="0.01" placeholder="0,00" oninput="calcReboco()" class="inp" /></div>
+                            <div><label class="lbl">Areia (m³)</label><input type="number" id="reb-p-areia" min="0"
+                                    step="0.01" placeholder="0,00" oninput="calcReboco()" class="inp" /></div>
+                        </div>
+                    </div>
+                    <div class="bg-amber-50 border border-amber-200 rounded-xl p-3">
+                        <p class="text-xs text-amber-700 font-medium">ℹ️ Traços padrão NBR. Margem de 10% aplicada.</p>
+                    </div>
+                </div>
+                <div id="res-reboco" class="bg-white rounded-2xl shadow-md p-6 flex items-center justify-center">
+                    <p class="text-slate-400 text-center text-sm">Preencha os dados ao lado para ver os resultados.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- =================== CONCRETO =================== -->
+        <section id="sec-concreto" class="section-panel hidden">
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-white rounded-2xl shadow-md p-6 space-y-4">
+                    <h2 class="text-lg font-bold text-slate-800">🏗️ Concreto Estrutural</h2>
+                    <div>
+                        <label class="lbl">Tipo de elemento</label>
+                        <select id="con-tipo" onchange="calcConcreto()" class="inp bg-white">
+                            <option value="viga">Viga</option>
+                            <option value="pilar">Pilar</option>
+                            <option value="laje">Laje</option>
+                        </select>
+                    </div>
+                    <div class="grid grid-cols-3 gap-3">
+                        <div><label class="lbl" id="con-label1">Largura (m)</label><input type="number" id="con-d1"
+                                min="0" step="0.01" placeholder="0.00" oninput="calcConcreto()" class="inp" /></div>
+                        <div><label class="lbl" id="con-label2">Altura (m)</label><input type="number" id="con-d2"
+                                min="0" step="0.01" placeholder="0.00" oninput="calcConcreto()" class="inp" /></div>
+                        <div><label class="lbl" id="con-label3">Comprimento (m)</label><input type="number" id="con-d3"
+                                min="0" step="0.01" placeholder="0.00" oninput="calcConcreto()" class="inp" /></div>
+                    </div>
+                    <div>
+                        <label class="lbl">Resistência (fck)</label>
+                        <select id="con-fck" onchange="calcConcreto()" class="inp bg-white">
+                            <option value="20">C20 — traço 1:2.5:3.5</option>
+                            <option value="25">C25 — traço 1:2:3</option>
+                            <option value="30">C30 — traço 1:1.5:2.5</option>
+                        </select>
+                    </div>
+                    <div class="border-t border-slate-100 pt-4">
+                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">💰 Preços Unitários
+                            (R$)</p>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div><label class="lbl">Cimento (saco 50kg)</label><input type="number" id="con-p-cim"
+                                    min="0" step="0.01" placeholder="0,00" oninput="calcConcreto()" class="inp" /></div>
+                            <div><label class="lbl">Areia (m³)</label><input type="number" id="con-p-areia" min="0"
+                                    step="0.01" placeholder="0,00" oninput="calcConcreto()" class="inp" /></div>
+                            <div><label class="lbl">Brita (m³)</label><input type="number" id="con-p-brita" min="0"
+                                    step="0.01" placeholder="0,00" oninput="calcConcreto()" class="inp" /></div>
+                        </div>
+                    </div>
+                    <div class="bg-amber-50 border border-amber-200 rounded-xl p-3">
+                        <p class="text-xs text-amber-700 font-medium">ℹ️ Consumo em kg/m³ conforme NBR. Margem de 10%
+                            aplicada.</p>
+                    </div>
+                </div>
+                <div id="res-concreto" class="bg-white rounded-2xl shadow-md p-6 flex items-center justify-center">
+                    <p class="text-slate-400 text-center text-sm">Preencha os dados ao lado para ver os resultados.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- =================== PISO =================== -->
+        <section id="sec-piso" class="section-panel hidden">
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-white rounded-2xl shadow-md p-6 space-y-4">
+                    <h2 class="text-lg font-bold text-slate-800">🔲 Piso e Revestimento</h2>
+                    <div>
+                        <label class="lbl">Área a revestir (m²)</label>
+                        <input type="number" id="piso-area" min="0" step="0.01" placeholder="Ex: 30"
+                            oninput="calcPiso()" class="inp" />
+                    </div>
+                    <div>
+                        <label class="lbl">Tamanho da peça</label>
+                        <select id="piso-tam" onchange="calcPiso()" class="inp bg-white">
+                            <option value="0.04">20x20cm (0,04 m²/peça)</option>
+                            <option value="0.0625">25x25cm (0,0625 m²/peça)</option>
+                            <option value="0.16" selected>40x40cm (0,16 m²/peça)</option>
+                            <option value="0.25">50x50cm (0,25 m²/peça)</option>
+                            <option value="0.36">60x60cm (0,36 m²/peça)</option>
+                            <option value="0.5625">75x75cm (0,5625 m²/peça)</option>
+                            <option value="1.0">100x100cm (1,00 m²/peça)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="lbl">Peças por caixa</label>
+                        <input type="number" id="piso-caixa" min="1" step="1" value="5" oninput="calcPiso()"
+                            class="inp" />
+                    </div>
+                    <div>
+                        <label class="lbl">Tipo de argamassa</label>
+                        <select id="piso-arg" onchange="calcPiso()" class="inp bg-white">
+                            <option value="simples">Argamassa simples (4 kg/m²)</option>
+                            <option value="colante">Argamassa colante AC-I (5 kg/m²)</option>
+                            <option value="acii">Argamassa colante AC-II (6 kg/m²)</option>
+                        </select>
+                    </div>
+                    <div class="border-t border-slate-100 pt-4">
+                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">💰 Preços Unitários
+                            (R$)</p>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div><label class="lbl">Caixa de piso</label><input type="number" id="piso-p-caixa" min="0"
+                                    step="0.01" placeholder="0,00" oninput="calcPiso()" class="inp" /></div>
+                            <div><label class="lbl">Argamassa (kg)</label><input type="number" id="piso-p-arg" min="0"
+                                    step="0.01" placeholder="0,00" oninput="calcPiso()" class="inp" /></div>
+                            <div><label class="lbl">Rejunte (kg)</label><input type="number" id="piso-p-rej" min="0"
+                                    step="0.01" placeholder="0,00" oninput="calcPiso()" class="inp" /></div>
+                        </div>
+                    </div>
+                    <div class="bg-amber-50 border border-amber-200 rounded-xl p-3">
+                        <p class="text-xs text-amber-700 font-medium">ℹ️ Rejunte: ~0,5 kg/m². Margem de 10% aplicada.
+                        </p>
+                    </div>
+                </div>
+                <div id="res-piso" class="bg-white rounded-2xl shadow-md p-6 flex items-center justify-center">
+                    <p class="text-slate-400 text-center text-sm">Preencha os dados ao lado para ver os resultados.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- =================== PINTURA =================== -->
+        <section id="sec-pintura" class="section-panel hidden">
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-white rounded-2xl shadow-md p-6 space-y-4">
+                    <h2 class="text-lg font-bold text-slate-800">🎨 Pintura</h2>
+                    <div>
+                        <label class="lbl">Área a pintar (m²)</label>
+                        <input type="number" id="pin-area" min="0" step="0.01" placeholder="Ex: 80"
+                            oninput="calcPintura()" class="inp" />
+                    </div>
+                    <div>
+                        <label class="lbl">Número de demãos</label>
+                        <select id="pin-demaos" onchange="calcPintura()" class="inp bg-white">
+                            <option value="2" selected>2 demãos (padrão)</option>
+                            <option value="3">3 demãos (acabamento premium)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="lbl">Tipo de tinta</label>
+                        <select id="pin-tipo" onchange="calcPintura()" class="inp bg-white">
+                            <option value="latex">Látex PVA — ~12 m²/L por demão</option>
+                            <option value="acrilica">Acrílica — ~10 m²/L por demão</option>
+                            <option value="esmalte">Esmalte — ~14 m²/L por demão</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="lbl">Calcular selador/massa corrida?</label>
+                        <select id="pin-selador" onchange="calcPintura()" class="inp bg-white">
+                            <option value="sim">Sim — incluir selador (1 lata 18L / 50m²)</option>
+                            <option value="nao">Não</option>
+                        </select>
+                    </div>
+                    <div class="border-t border-slate-100 pt-4">
+                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">💰 Preços Unitários
+                            (R$)</p>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div><label class="lbl">Lata de tinta 18L</label><input type="number" id="pin-p-tinta"
+                                    min="0" step="0.01" placeholder="0,00" oninput="calcPintura()" class="inp" /></div>
+                            <div><label class="lbl">Lata selador/massa 18L</label><input type="number" id="pin-p-sel"
+                                    min="0" step="0.01" placeholder="0,00" oninput="calcPintura()" class="inp" /></div>
+                        </div>
+                    </div>
+                    <div class="bg-amber-50 border border-amber-200 rounded-xl p-3">
+                        <p class="text-xs text-amber-700 font-medium">ℹ️ Rendimento médio ABNT. Margem de 10% aplicada.
+                            1 lata = 18 litros.</p>
+                    </div>
+                </div>
+                <div id="res-pintura" class="bg-white rounded-2xl shadow-md p-6 flex items-center justify-center">
+                    <p class="text-slate-400 text-center text-sm">Preencha os dados ao lado para ver os resultados.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- RELATÓRIO BUTTON -->
+        <div class="no-print mt-6 flex justify-end">
+            <button onclick="gerarRelatorio()"
+                class="bg-amber-500 hover:bg-amber-600 text-white font-bold py-3 px-8 rounded-xl shadow-lg transition-all flex items-center gap-2 text-sm">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                </svg>
+                Gerar Relatório / Imprimir PDF
+            </button>
+        </div>
+
+        <!-- MODAL RELATÓRIO -->
+        <div id="modal-relatorio"
+            class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+                <div class="gradient-header text-white p-6 rounded-t-2xl sticky top-0 z-10">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h2 class="text-xl font-bold">📋 Relatório de Materiais e Custos</h2>
+                            <p class="text-slate-300 text-sm mt-1" id="rel-data"></p>
+                        </div>
+                        <button onclick="fecharModal()"
+                            class="text-slate-300 hover:text-white text-3xl font-bold leading-none">×</button>
+                    </div>
+                </div>
+                <div class="p-6" id="rel-content"></div>
+                <div class="p-6 pt-0 flex gap-3">
+                    <button onclick="window.print()"
+                        class="flex-1 bg-blue-800 hover:bg-blue-900 text-white font-semibold py-3 rounded-xl transition flex items-center justify-center gap-2">
+                        🖨️ Imprimir / Salvar PDF
+                    </button>
+                    <button onclick="fecharModal()"
+                        class="flex-1 bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold py-3 rounded-xl transition">
+                        Fechar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="no-print text-center py-6 text-slate-400 text-xs mt-4">
+        Calculadora de Obras Ágil — Todos os cálculos incluem 10% de margem de perda. Use como estimativa inicial.
+    </footer>
+
+    <style>
+        .lbl {
+            display: block;
+            font-size: .8rem;
+            font-weight: 500;
+            color: #475569;
+            margin-bottom: .25rem;
+        }
+
+        .inp {
+            width: 100%;
+            border: 2px solid #e2e8f0;
+            border-radius: .75rem;
+            padding: .75rem 1rem;
+            outline: none;
+            transition: border-color .2s;
+            color: #1e293b;
+            font-size: .9rem;
+        }
+
+        .inp:focus {
+            border-color: #3b82f6;
+        }
+    </style>
+
+    <script>
+        // ===== TABS =====
+        function showTab(name) {
+            ['alvenaria', 'reboco', 'concreto', 'piso', 'pintura'].forEach(t => {
+                document.getElementById('sec-' + t).classList.add('hidden');
+                const tab = document.getElementById('tab-' + t);
+                tab.className = tab.className.replace('tab-active', 'tab-inactive');
+            });
+            document.getElementById('sec-' + name).classList.remove('hidden');
+            const at = document.getElementById('tab-' + name);
+            at.className = at.className.replace('tab-inactive', 'tab-active');
+        }
+
+        // ===== HELPERS =====
+        const LOSS = 1.10;
+        const R = window._lastResults = {};
+
+        function v(id) { return parseFloat(document.getElementById(id).value) || 0; }
+        function sv(id) { return document.getElementById(id).value; }
+        function fmt(n, d = 2) { return n.toFixed(d).replace('.', ','); }
+        function cur(n) { return 'R$ ' + n.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+
+        function costRow(label, hasCost) { return hasCost > 0 ? `<tr class="bg-green-50"><td class="py-2 pr-4 text-green-700 text-sm font-medium">💰 ${label}</td><td class="py-2 text-right font-bold text-green-800" colspan="2">${cur(hasCost)}</td></tr>` : ''; }
+
+        function totalBadge(total) {
+            if (!total) return '';
+            return `<div class="mt-4 cost-badge text-white rounded-xl p-4 flex justify-between items-center">
+    <span class="font-semibold text-sm">💰 Custo Total Estimado</span>
+    <span class="text-2xl font-extrabold">${cur(total)}</span>
+  </div>`;
+        }
+
+        function resultHTML(title, icon, items, total) {
+            const rows = items.map(i => `
+    <tr class="border-b border-slate-100 last:border-0">
+      <td class="py-2 pr-4 text-slate-600 text-sm">${i.label}</td>
+      <td class="py-2 text-right font-bold text-slate-800">${i.value}</td>
+      <td class="py-2 pl-3 text-left text-slate-500 text-sm">${i.unit}</td>
+    </tr>
+    ${i.cost ? `<tr class="bg-green-50 border-b border-slate-100"><td class="py-1 pr-4 text-green-700 text-xs pl-2">↳ custo</td><td colspan="2" class="py-1 text-right text-xs font-semibold text-green-800 pr-3">${cur(i.cost)}</td></tr>` : ''}
+  `).join('');
+            return `<div class="result-card">
+    <h3 class="text-lg font-bold text-slate-800 mb-4">${icon} ${title}</h3>
+    <table class="w-full">
+      <thead><tr class="bg-slate-50">
+        <th class="text-left py-2 px-1 text-xs text-slate-500 font-semibold uppercase">Material</th>
+        <th class="text-right py-2 text-xs text-slate-500 font-semibold uppercase">Qtd.</th>
+        <th class="text-left py-2 pl-3 text-xs text-slate-500 font-semibold uppercase">Unid.</th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+    <div class="mt-3 bg-green-50 border border-green-200 rounded-xl p-3">
+      <p class="text-xs text-green-700 font-medium">✅ Já incluída margem de perda de 10%</p>
+    </div>
+    ${totalBadge(total)}
+  </div>`;
+        }
+
+        // ===== ALVENARIA =====
+        function calcAlvenaria() {
+            const comp = v('alv-comp'), alt = v('alv-alt'), tipo = sv('alv-tipo');
+            const el = document.getElementById('res-alvenaria');
+            if (!comp || !alt) { el.innerHTML = '<p class="text-slate-400 text-center text-sm">Preencha comprimento e altura.</p>'; return; }
+            const area = comp * alt;
+            const pM2 = { ceramico6: 35, ceramico8: 20, macico: 65, bloco_concreto: 13 };
+            const qtdTij = Math.ceil(area * pM2[tipo] * LOSS);
+            const vol_arg = area * 0.012 * LOSS;
+            const sacosCim = Math.ceil(vol_arg / 0.033);
+            const areia = parseFloat((vol_arg * 0.75).toFixed(3));
+
+            const ptj = v('alv-p-tj'), pcim = v('alv-p-cim'), pareia = v('alv-p-areia');
+            const cTj = ptj ? qtdTij * ptj : 0, cCim = pcim ? sacosCim * pcim : 0, cAreia = pareia ? areia * pareia : 0;
+            const total = (cTj || pcim || pareia) ? cTj + cCim + cAreia : 0;
+
+            R.alvenaria = { area, qtdTij, sacosCim, areia, ptj, pcim, pareia, cTj, cCim, cAreia, total };
+            el.innerHTML = resultHTML('Resultado — Alvenaria', '🧱', [
+                { label: 'Área da parede', value: fmt(area), unit: 'm²' },
+                { label: 'Tijolos/Blocos', value: qtdTij.toLocaleString('pt-BR'), unit: 'unid.', cost: cTj || 0 },
+                { label: 'Sacos de Cimento (50kg)', value: sacosCim, unit: 'sacos', cost: cCim || 0 },
+                { label: 'Areia', value: fmt(areia, 3), unit: 'm³', cost: cAreia || 0 },
+            ], total);
+        }
+
+        // ===== REBOCO =====
+        function calcReboco() {
+            const area = v('reb-area'), tipo = sv('reb-tipo'), esp = (v('reb-esp') || 2) / 100;
+            const el = document.getElementById('res-reboco');
+            if (!area) { el.innerHTML = '<p class="text-slate-400 text-center text-sm">Preencha a área.</p>'; return; }
+            const vol = area * esp * LOSS;
+            const tracos = { chapisco: { c: 1, cal: 0, a: 3, nome: 'Chapisco 1:3' }, reboco: { c: 1, cal: 2, a: 9, nome: 'Reboco 1:2:9' }, emboco: { c: 1, cal: 1, a: 6, nome: 'Emboço 1:1:6' } };
+            const tr = tracos[tipo], soma = tr.c + tr.cal + tr.a;
+            const volCim = (tr.c / soma) * vol;
+            const sacosCim = Math.ceil(volCim / 0.033);
+            const areia = parseFloat(((tr.a / soma) * vol).toFixed(3));
+            const calSc = tr.cal > 0 ? Math.ceil(((tr.cal / soma) * vol) / 0.025) : 0;
+
+            const pcim = v('reb-p-cim'), pcal = v('reb-p-cal'), pareia = v('reb-p-areia');
+            const cCim = pcim ? sacosCim * pcim : 0, cCal = pcal ? calSc * pcal : 0, cAreia = pareia ? areia * pareia : 0;
+            const total = (pcim || pcal || pareia) ? cCim + cCal + cAreia : 0;
+
+            R.reboco = { area, tipo: tr.nome, sacosCim, calSc, areia, cCim, cCal, cAreia, total };
+            const items = [
+                { label: 'Área total', value: fmt(area), unit: 'm²' },
+                { label: 'Sacos de Cimento (50kg)', value: sacosCim, unit: 'sacos', cost: cCim || 0 },
+            ];
+            if (calSc > 0) items.push({ label: 'Cal Hidratada (saco 20kg)', value: calSc, unit: 'sacos', cost: cCal || 0 });
+            items.push({ label: 'Areia', value: fmt(areia, 3), unit: 'm³', cost: cAreia || 0 });
+            el.innerHTML = resultHTML('Resultado — ' + tr.nome, '🪣', items, total);
+        }
+
+        // ===== CONCRETO =====
+        function calcConcreto() {
+            const tipo = sv('con-tipo'), fck = sv('con-fck');
+            const d1 = v('con-d1'), d2 = v('con-d2'), d3 = v('con-d3');
+            const el = document.getElementById('res-concreto');
+            const lbs = { viga: ['Largura (m)', 'Altura (m)', 'Comprimento (m)'], pilar: ['Largura (m)', 'Profundidade (m)', 'Altura (m)'], laje: ['Comprimento (m)', 'Largura (m)', 'Espessura (m)'] };
+            ['con-label1', 'con-label2', 'con-label3'].forEach((id, i) => document.getElementById(id).textContent = lbs[tipo][i]);
+            if (!d1 || !d2 || !d3) { el.innerHTML = '<p class="text-slate-400 text-center text-sm">Preencha as dimensões.</p>'; return; }
+            const vol = d1 * d2 * d3 * LOSS;
+            const consumos = { '20': { cimento: 340, areia: 680, brita: 1020, nome: 'C20 — 1:2:3' }, '25': { cimento: 380, areia: 760, brita: 950, nome: 'C25 — 1:2:2.5' }, '30': { cimento: 420, areia: 630, brita: 1050, nome: 'C30 — 1:1.5:2.5' } };
+            const c = consumos[fck];
+            const sacosCim = Math.ceil((c.cimento * vol) / 50);
+            const areia = parseFloat(((c.areia * vol) / 1500).toFixed(3));
+            const brita = parseFloat(((c.brita * vol) / 1400).toFixed(3));
+
+            const pcim = v('con-p-cim'), pareia = v('con-p-areia'), pbrita = v('con-p-brita');
+            const cCim = pcim ? sacosCim * pcim : 0, cAreia = pareia ? areia * pareia : 0, cBrita = pbrita ? brita * pbrita : 0;
+            const total = (pcim || pareia || pbrita) ? cCim + cAreia + cBrita : 0;
+
+            R.concreto = { fck: c.nome, vol, sacosCim, areia, brita, cCim, cAreia, cBrita, total };
+            el.innerHTML = resultHTML('Resultado — ' + c.nome, '🏗️', [
+                { label: 'Volume de concreto', value: fmt(vol, 3), unit: 'm³' },
+                { label: 'Sacos de Cimento (50kg)', value: sacosCim, unit: 'sacos', cost: cCim || 0 },
+                { label: 'Areia', value: fmt(areia, 3), unit: 'm³', cost: cAreia || 0 },
+                { label: 'Brita', value: fmt(brita, 3), unit: 'm³', cost: cBrita || 0 },
+            ], total);
+        }
+
+        // ===== PISO =====
+        function calcPiso() {
+            const area = v('piso-area'), tamPeca = parseFloat(sv('piso-tam')) || 0.16;
+            const pcaixaEl = parseInt(document.getElementById('piso-caixa').value) || 5;
+            const argTipo = sv('piso-arg');
+            const el = document.getElementById('res-piso');
+            if (!area) { el.innerHTML = '<p class="text-slate-400 text-center text-sm">Preencha a área.</p>'; return; }
+            const areaC = area * LOSS;
+            const pecas = Math.ceil(areaC / tamPeca);
+            const caixas = Math.ceil(pecas / pcaixaEl);
+            const kgM2 = { simples: 4, colante: 5, acii: 6 }[argTipo];
+            const argKg = Math.ceil(areaC * kgM2);
+            const rejKg = Math.ceil(areaC * 0.5);
+
+            const pcaixa = v('piso-p-caixa'), parg = v('piso-p-arg'), prej = v('piso-p-rej');
+            const cCaixa = pcaixa ? caixas * pcaixa : 0, cArg = parg ? argKg * parg : 0, cRej = prej ? rejKg * prej : 0;
+            const total = (pcaixa || parg || prej) ? cCaixa + cArg + cRej : 0;
+
+            R.piso = { area, pecas, caixas, argKg, rejKg, cCaixa, cArg, cRej, total };
+            el.innerHTML = resultHTML('Resultado — Piso/Revestimento', '🔲', [
+                { label: 'Área com margem', value: fmt(areaC), unit: 'm²' },
+                { label: 'Peças', value: pecas.toLocaleString('pt-BR'), unit: 'unid.' },
+                { label: 'Caixas', value: caixas, unit: 'caixas', cost: cCaixa || 0 },
+                { label: 'Argamassa', value: argKg, unit: 'kg', cost: cArg || 0 },
+                { label: 'Rejunte', value: rejKg, unit: 'kg', cost: cRej || 0 },
+            ], total);
+        }
+
+        // ===== PINTURA =====
+        function calcPintura() {
+            const area = v('pin-area'), demaos = parseInt(sv('pin-demaos')) || 2, tipoSel = sv('pin-tipo'), selador = sv('pin-selador');
+            const el = document.getElementById('res-pintura');
+            if (!area) { el.innerHTML = '<p class="text-slate-400 text-center text-sm">Preencha a área.</p>'; return; }
+
+            // Rendimento por litro por demão
+            const rend = { latex: 12, acrilica: 10, esmalte: 14 }[tipoSel];
+            const nomes = { latex: 'Látex PVA', acrilica: 'Acrílica', esmalte: 'Esmalte' };
+
+            // Total de litros necessários (área × demãos / rendimento) + 10% perda
+            const litrosTinta = area * demaos / rend * LOSS;
+            const latasTinta = Math.ceil(litrosTinta / 18);
+
+            // Selador: 1 lata 18L cobre ~50m²
+            const latasSelador = selador === 'sim' ? Math.ceil(area / 50) : 0;
+
+            const ptinta = v('pin-p-tinta'), psel = v('pin-p-sel');
+            const cTinta = ptinta ? latasTinta * ptinta : 0, cSel = psel ? latasSelador * psel : 0;
+            const total = (ptinta || psel) ? cTinta + cSel : 0;
+
+            R.pintura = { area, demaos, tipo: nomes[tipoSel], litrosTinta, latasTinta, latasSelador, cTinta, cSel, total };
+
+            const items = [
+                { label: 'Área a pintar', value: fmt(area), unit: 'm²' },
+                { label: 'Demãos', value: demaos, unit: 'demãos' },
+                { label: `Tinta ${nomes[tipoSel]} (rendimento ${rend} m²/L/demão)`, value: fmt(litrosTinta, 1), unit: 'litros' },
+                { label: 'Latas de 18L — Tinta', value: latasTinta, unit: 'latas', cost: cTinta || 0 },
+            ];
+            if (latasSelador > 0) items.push({ label: 'Latas de 18L — Selador/Massa', value: latasSelador, unit: 'latas', cost: cSel || 0 });
+
+            el.innerHTML = resultHTML('Resultado — Pintura', '🎨', items, total);
+        }
+
+        // ===== RELATÓRIO =====
+        function gerarRelatorio() {
+            const now = new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+            document.getElementById('rel-data').textContent = 'Gerado em ' + now;
+
+            function secao(title, rows, total) {
+                const trs = rows.map(r => `
+      <tr><td class="py-2 px-3 border-b border-slate-100 text-sm">${r.label}</td>
+          <td class="py-2 px-3 border-b border-slate-100 text-right font-semibold text-sm">${r.val}</td></tr>
+      ${r.cost ? `<tr class="bg-green-50"><td class="py-1 px-3 text-xs text-green-700 pl-5">↳ custo unitário</td><td class="py-1 px-3 text-right text-xs text-green-800 font-semibold">${cur(r.cost)}</td></tr>` : ''}
+    `).join('');
+                const totalRow = total ? `<tr class="cost-badge text-white"><td class="py-3 px-3 font-bold text-sm">💰 Custo Total</td><td class="py-3 px-3 text-right font-extrabold">${cur(total)}</td></tr>` : '';
+                return `<div class="mb-6">
+      <h3 class="font-bold text-slate-800 mb-3 pb-2 border-b-2 border-blue-800">${title}</h3>
+      <table class="w-full">
+        <tr class="bg-slate-50"><th class="text-left py-2 px-3 text-slate-500 text-xs">Material</th><th class="text-right py-2 px-3 text-slate-500 text-xs">Quantidade / Custo</th></tr>
+        ${trs}${totalRow}
+      </table></div>`;
+            }
+
+            let html = '';
+            const r = R;
+
+            if (r.alvenaria) {
+                html += secao('🧱 Alvenaria', [
+                    { label: `Área da parede`, val: `${fmt(r.alvenaria.area)} m²` },
+                    { label: 'Tijolos/Blocos', val: `${r.alvenaria.qtdTij.toLocaleString('pt-BR')} unid.`, cost: r.alvenaria.cTj || 0 },
+                    { label: 'Cimento (50kg)', val: `${r.alvenaria.sacosCim} sacos`, cost: r.alvenaria.cCim || 0 },
+                    { label: 'Areia', val: `${fmt(r.alvenaria.areia, 3)} m³`, cost: r.alvenaria.cAreia || 0 },
+                ], r.alvenaria.total);
+            }
+            if (r.reboco) {
+                const rows = [
+                    { label: 'Área', val: `${fmt(r.reboco.area)} m²` },
+                    { label: 'Cimento (50kg)', val: `${r.reboco.sacosCim} sacos`, cost: r.reboco.cCim || 0 },
+                ];
+                if (r.reboco.calSc > 0) rows.push({ label: 'Cal (saco 20kg)', val: `${r.reboco.calSc} sacos`, cost: r.reboco.cCal || 0 });
+                rows.push({ label: 'Areia', val: `${fmt(r.reboco.areia, 3)} m³`, cost: r.reboco.cAreia || 0 });
+                html += secao(`🪣 ${r.reboco.tipo}`, rows, r.reboco.total);
+            }
+            if (r.concreto) {
+                html += secao(`🏗️ Concreto ${r.concreto.fck}`, [
+                    { label: 'Volume', val: `${fmt(r.concreto.vol, 3)} m³` },
+                    { label: 'Cimento (50kg)', val: `${r.concreto.sacosCim} sacos`, cost: r.concreto.cCim || 0 },
+                    { label: 'Areia', val: `${fmt(r.concreto.areia, 3)} m³`, cost: r.concreto.cAreia || 0 },
+                    { label: 'Brita', val: `${fmt(r.concreto.brita, 3)} m³`, cost: r.concreto.cBrita || 0 },
+                ], r.concreto.total);
+            }
+            if (r.piso) {
+                html += secao('🔲 Piso/Revestimento', [
+                    { label: 'Peças', val: `${r.piso.pecas.toLocaleString('pt-BR')} unid.` },
+                    { label: 'Caixas', val: `${r.piso.caixas} caixas`, cost: r.piso.cCaixa || 0 },
+                    { label: 'Argamassa', val: `${r.piso.argKg} kg`, cost: r.piso.cArg || 0 },
+                    { label: 'Rejunte', val: `${r.piso.rejKg} kg`, cost: r.piso.cRej || 0 },
+                ], r.piso.total);
+            }
+            if (r.pintura) {
+                const prows = [
+                    { label: 'Área', val: `${fmt(r.pintura.area)} m²` },
+                    { label: 'Demãos', val: `${r.pintura.demaos}` },
+                    { label: `Tinta ${r.pintura.tipo}`, val: `${r.pintura.latasTinta} latas (18L)`, cost: r.pintura.cTinta || 0 },
+                ];
+                if (r.pintura.latasSelador > 0) prows.push({ label: 'Selador/Massa', val: `${r.pintura.latasSelador} latas (18L)`, cost: r.pintura.cSel || 0 });
+                html += secao('🎨 Pintura', prows, r.pintura.total);
+            }
+
+            // Grand total
+            const grandTotal = [r.alvenaria, r.reboco, r.concreto, r.piso, r.pintura].reduce((s, x) => s + (x && x.total ? x.total : 0), 0);
+            if (grandTotal > 0) {
+                html += `<div class="cost-badge text-white rounded-xl p-5 flex justify-between items-center mt-4">
+      <span class="font-bold text-base">🏗️ CUSTO TOTAL GERAL</span>
+      <span class="text-3xl font-extrabold">${cur(grandTotal)}</span>
+    </div>`;
+            }
+
+            if (!html) html = '<p class="text-slate-400 text-center py-8">Nenhum cálculo ainda. Preencha ao menos uma seção.</p>';
+            else html += `<p class="text-xs text-slate-400 mt-4">⚠️ Estimativa com traços padrão NBR e 10% de margem. Consulte um profissional habilitado.</p>`;
+
+            document.getElementById('rel-content').innerHTML = html;
+            document.getElementById('modal-relatorio').classList.remove('hidden');
+        }
+
+        function fecharModal() {
+            document.getElementById('modal-relatorio').classList.add('hidden');
+        }
+    </script>
+</body>
+
+</html>
