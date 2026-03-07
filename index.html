@@ -414,7 +414,7 @@
                     </div>
                     <div>
                         <label class="lbl">Tamanho da peça</label>
-                        <select id="piso-tam" onchange="calcPiso()" class="inp bg-white">
+                        <select id="piso-tam" onchange="pisoTamChange()" class="inp bg-white">
                             <option value="0.04">20x20cm (0,04 m²/peça)</option>
                             <option value="0.0625">25x25cm (0,0625 m²/peça)</option>
                             <option value="0.16" selected>40x40cm (0,16 m²/peça)</option>
@@ -422,7 +422,20 @@
                             <option value="0.36">60x60cm (0,36 m²/peça)</option>
                             <option value="0.5625">75x75cm (0,5625 m²/peça)</option>
                             <option value="1.0">100x100cm (1,00 m²/peça)</option>
+                            <option value="custom">➕ Personalizado...</option>
                         </select>
+                    </div>
+                    <!-- Tamanho personalizado Piso -->
+                    <div id="piso-custom-box"
+                        class="hidden bg-slate-50 border border-slate-200 rounded-xl p-3 space-y-2">
+                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Tamanho Personalizado
+                            (cm)</p>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div><label class="lbl">Largura (cm)</label><input type="number" id="piso-custom-w" min="1"
+                                    step="0.1" placeholder="Ex: 33" oninput="calcPiso()" class="inp" /></div>
+                            <div><label class="lbl">Altura (cm)</label><input type="number" id="piso-custom-h" min="1"
+                                    step="0.1" placeholder="Ex: 33" oninput="calcPiso()" class="inp" /></div>
+                        </div>
                     </div>
                     <div>
                         <label class="lbl">Peças por caixa</label>
@@ -814,6 +827,12 @@
             calcPiso();
         }
 
+        function pisoTamChange() {
+            const val = document.getElementById('piso-tam').value;
+            document.getElementById('piso-custom-box').classList.toggle('hidden', val !== 'custom');
+            calcPiso();
+        }
+
         // ===== HELPERS =====
         const LOSS = 1.10;
         const R = window._lastResults = {};
@@ -1070,7 +1089,16 @@
 
         // ===== PISO =====
         function calcPiso() {
-            const area = v('piso-area'), tamPeca = parseFloat(sv('piso-tam')) || 0.16;
+            const area = v('piso-area');
+            const tamSel = sv('piso-tam');
+            let tamPeca;
+            if (tamSel === 'custom') {
+                const w = v('piso-custom-w') / 100;
+                const h = v('piso-custom-h') / 100;
+                tamPeca = w * h || 0.16;
+            } else {
+                tamPeca = parseFloat(tamSel) || 0.16;
+            }
             const pcaixaEl = parseInt(document.getElementById('piso-caixa').value) || 5;
             const argTipo = sv('piso-arg');
             const el = document.getElementById('res-piso');
