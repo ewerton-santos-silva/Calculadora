@@ -103,6 +103,9 @@
             <button onclick="showTab('eletrica')" id="tab-eletrica"
                 class="tab-inactive flex-1 min-w-[100px] py-3 px-1 rounded-xl text-xs font-semibold transition-all">⚡
                 Elétrica</button>
+            <button onclick="showTab('rendimentos')" id="tab-rendimentos"
+                class="tab-inactive flex-1 min-w-[100px] py-3 px-1 rounded-xl text-xs font-semibold transition-all">📊
+                Rendimentos</button>
             <button onclick="showTab('pintura')" id="tab-pintura"
                 class="tab-inactive flex-1 min-w-[100px] py-3 px-1 rounded-xl text-xs font-semibold transition-all">🎨
                 Pintura</button>
@@ -243,11 +246,32 @@
                             oninput="calcReboco()" class="inp" />
                     </div>
                     <div>
-                        <label class="lbl">Tipo de serviço</label>
-                        <select id="reb-tipo" onchange="calcReboco()" class="inp bg-white">
+                        <label class="lbl">Tipo de serviço / Traço (Cim:Cal:Areia)</label>
+                        <select id="reb-tipo" onchange="rebTipoChange()" class="inp bg-white">
                             <option value="chapisco">Chapisco (traço 1:3)</option>
                             <option value="reboco">Reboco interno (traço 1:2:9)</option>
                             <option value="emboco">Emboço externo (traço 1:1:6)</option>
+                            <option value="custom">➕ Personalizado...</option>
+                        </select>
+                    </div>
+                    <!-- Traço personalizado Reboco -->
+                    <div id="reb-traco-custom-box" class="hidden bg-slate-50 border border-slate-200 rounded-xl p-3">
+                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">Traço Personalizado
+                        </p>
+                        <div class="grid grid-cols-3 gap-2">
+                            <div><label class="lbl">Cimento</label><input type="number" id="reb-tr-c" min="1" step="0.5"
+                                    value="1" oninput="calcReboco()" class="inp" /></div>
+                            <div><label class="lbl" id="reb-lbl-aditivo">Cal</label><input type="number" id="reb-tr-cal"
+                                    min="0" step="0.5" value="2" oninput="calcReboco()" class="inp" /></div>
+                            <div><label class="lbl">Areia</label><input type="number" id="reb-tr-a" min="1" step="0.5"
+                                    value="9" oninput="calcReboco()" class="inp" /></div>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="lbl">Aditivo / Liga</label>
+                        <select id="reb-aditivo" onchange="rebAditivoChange()" class="inp bg-white">
+                            <option value="cal">Cal Hidratada (Padrão)</option>
+                            <option value="areia_fina">Areia Fina (Massa Fina)</option>
                         </select>
                     </div>
                     <div>
@@ -317,12 +341,26 @@
                                 min="0" step="0.01" placeholder="0.00" oninput="calcConcreto()" class="inp" /></div>
                     </div>
                     <div>
-                        <label class="lbl">Resistência (fck)</label>
-                        <select id="con-fck" onchange="calcConcreto()" class="inp bg-white">
+                        <label class="lbl">Resistência (fck) / Traço (Cim:Areia:Brita)</label>
+                        <select id="con-fck" onchange="conFckChange()" class="inp bg-white">
                             <option value="20">C20 — traço 1:2.5:3.5</option>
                             <option value="25">C25 — traço 1:2:3</option>
                             <option value="30">C30 — traço 1:1.5:2.5</option>
+                            <option value="custom">➕ Personalizado...</option>
                         </select>
+                    </div>
+                    <!-- Traço personalizado Concreto -->
+                    <div id="con-traco-custom-box" class="hidden bg-slate-50 border border-slate-200 rounded-xl p-3">
+                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">Traço Personalizado
+                        </p>
+                        <div class="grid grid-cols-3 gap-2">
+                            <div><label class="lbl">Cimento</label><input type="number" id="con-tr-c" min="1" step="0.5"
+                                    value="1" oninput="calcConcreto()" class="inp" /></div>
+                            <div><label class="lbl">Areia</label><input type="number" id="con-tr-a" min="1" step="0.5"
+                                    value="2" oninput="calcConcreto()" class="inp" /></div>
+                            <div><label class="lbl">Brita</label><input type="number" id="con-tr-b" min="1" step="0.5"
+                                    value="3" oninput="calcConcreto()" class="inp" /></div>
+                        </div>
                     </div>
                     <div class="border-t border-slate-100 pt-4">
                         <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">💰 Preços de
@@ -393,12 +431,26 @@
                             class="inp" />
                     </div>
                     <div>
-                        <label class="lbl">Tipo de argamassa</label>
-                        <select id="piso-arg" onchange="calcPiso()" class="inp bg-white">
+                        <label class="lbl">Tipo de argamassa / Traço (Cim:Areia)</label>
+                        <select id="piso-arg" onchange="pisoArgChange()" class="inp bg-white">
                             <option value="simples">Argamassa simples (4 kg/m²)</option>
                             <option value="colante">Argamassa colante AC-I (5 kg/m²)</option>
                             <option value="acii">Argamassa colante AC-II (6 kg/m²)</option>
+                            <option value="custom">➕ Personalizada (Feita em Obra)...</option>
                         </select>
+                    </div>
+                    <!-- Traço personalizado Piso -->
+                    <div id="piso-traco-custom-box" class="hidden bg-slate-50 border border-slate-200 rounded-xl p-3">
+                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">Traço Personalizado
+                            (Obra)</p>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div><label class="lbl">Cimento</label><input type="number" id="piso-tr-c" min="1"
+                                    step="0.5" value="1" oninput="calcPiso()" class="inp" /></div>
+                            <div><label class="lbl">Areia</label><input type="number" id="piso-tr-a" min="1" step="0.5"
+                                    value="3" oninput="calcPiso()" class="inp" /></div>
+                        </div>
+                        <p class="text-[10px] text-slate-500 mt-2 italic">Estimativa para assentamento de piso virado em
+                            obra.</p>
                     </div>
                     <div class="border-t border-slate-100 pt-4">
                         <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">💰 Preços de
@@ -501,6 +553,80 @@
                 </div>
                 <div id="res-eletrica" class="bg-white rounded-2xl shadow-md p-6 flex items-center justify-center">
                     <p class="text-slate-400 text-center text-sm">Preencha os dados ao lado para ver os resultados.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- =================== RENDIMENTOS =================== -->
+        <section id="sec-rendimentos" class="section-panel hidden">
+            <div class="bg-white rounded-2xl shadow-md p-6 space-y-6">
+                <div class="flex items-center gap-3 border-b border-slate-100 pb-4">
+                    <div class="bg-blue-100 p-2 rounded-lg text-blue-600">📊</div>
+                    <h2 class="text-xl font-bold text-slate-800">Rendimento Médio Profissional</h2>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm">
+                        <thead class="bg-slate-50 text-slate-500 font-semibold uppercase tracking-wider">
+                            <tr>
+                                <th class="px-4 py-3 rounded-l-lg">Etapa / Serviço</th>
+                                <th class="px-4 py-3">Profissional</th>
+                                <th class="px-4 py-3">Unid.</th>
+                                <th class="px-4 py-3 rounded-r-lg">Rendimento (Dia)</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-100">
+                            <tr>
+                                <td class="px-4 py-3 font-medium text-slate-700">🧱 Alvenaria (Tijolo 6 furos)</td>
+                                <td class="px-4 py-3 text-slate-600">Pedreiro + Servente</td>
+                                <td class="px-4 py-3 text-slate-500">m²</td>
+                                <td class="px-4 py-3 font-bold text-blue-600">12 a 15</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-3 font-medium text-slate-700">🪣 Chapisco</td>
+                                <td class="px-4 py-3 text-slate-600">Pedreiro + Servente</td>
+                                <td class="px-4 py-3 text-slate-500">m²</td>
+                                <td class="px-4 py-3 font-bold text-blue-600">30 a 50</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-3 font-medium text-slate-700">🪣 Reboco Interno</td>
+                                <td class="px-4 py-3 text-slate-600">Pedreiro + Servente</td>
+                                <td class="px-4 py-3 text-slate-500">m²</td>
+                                <td class="px-4 py-3 font-bold text-blue-600">15 a 20</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-3 font-medium text-slate-700">🏗️ Concreto (Vigas/Pilares)</td>
+                                <td class="px-4 py-3 text-slate-600">Pedreiro + Servente</td>
+                                <td class="px-4 py-3 text-slate-500">m³</td>
+                                <td class="px-4 py-3 font-bold text-blue-600">0.5 a 0.8</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-3 font-medium text-slate-700">🔲 Piso/Revestimento</td>
+                                <td class="px-4 py-3 text-slate-600">Pedreiro (Ladrilheiro)</td>
+                                <td class="px-4 py-3 text-slate-500">m²</td>
+                                <td class="px-4 py-3 font-bold text-blue-600">15 a 20</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-3 font-medium text-slate-700">🎨 Pintura (2 demãos)</td>
+                                <td class="px-4 py-3 text-slate-600">Pintor</td>
+                                <td class="px-4 py-3 text-slate-500">m²</td>
+                                <td class="px-4 py-3 font-bold text-blue-600">40 a 50</td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-3 font-medium text-slate-700">⚡ Elétrica (Passagem + Tomadas)</td>
+                                <td class="px-4 py-3 text-slate-600">Eletricista</td>
+                                <td class="px-4 py-3 text-slate-500">pontos</td>
+                                <td class="px-4 py-3 font-bold text-blue-600">10 a 15</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="bg-blue-50 border border-blue-200 rounded-xl p-4">
+                    <p class="text-sm text-blue-800 leading-relaxed">
+                        <span class="font-bold">Dica:</span> Estes valores são médias de mercado para serviços
+                        residenciais comuns. O rendimento pode variar conforme a complexidade da obra, o clima e a
+                        experiência da equipe. Use estes dados para conferir se o número de dias informado nas outras
+                        abas está realista.
+                    </p>
                 </div>
             </div>
         </section>
@@ -649,7 +775,7 @@
     <script>
         // ===== TABS =====
         function showTab(name) {
-            ['alvenaria', 'reboco', 'concreto', 'piso', 'eletrica', 'pintura'].forEach(t => {
+            ['alvenaria', 'reboco', 'concreto', 'piso', 'eletrica', 'rendimentos', 'pintura'].forEach(t => {
                 document.getElementById('sec-' + t).classList.add('hidden');
                 const tab = document.getElementById('tab-' + t);
                 tab.className = tab.className.replace('tab-active', 'tab-inactive');
@@ -657,6 +783,30 @@
             document.getElementById('sec-' + name).classList.remove('hidden');
             const at = document.getElementById('tab-' + name);
             at.className = at.className.replace('tab-inactive', 'tab-active');
+        }
+
+        function rebTipoChange() {
+            const val = document.getElementById('reb-tipo').value;
+            document.getElementById('reb-traco-custom-box').classList.toggle('hidden', val !== 'custom');
+            calcReboco();
+        }
+
+        function rebAditivoChange() {
+            const ad = document.getElementById('reb-aditivo').value;
+            document.getElementById('reb-lbl-aditivo').textContent = ad === 'cal' ? 'Cal' : 'Areia Fina (v/v)';
+            calcReboco();
+        }
+
+        function conFckChange() {
+            const val = document.getElementById('con-fck').value;
+            document.getElementById('con-traco-custom-box').classList.toggle('hidden', val !== 'custom');
+            calcConcreto();
+        }
+
+        function pisoArgChange() {
+            const val = document.getElementById('piso-arg').value;
+            document.getElementById('piso-traco-custom-box').classList.toggle('hidden', val !== 'custom');
+            calcPiso();
         }
 
         // ===== HELPERS =====
@@ -791,19 +941,40 @@
 
         // ===== REBOCO =====
         function calcReboco() {
-            const area = v('reb-area'), tipo = sv('reb-tipo'), esp = (v('reb-esp') || 2) / 100;
+            const area = v('reb-area'), tipo = sv('reb-tipo'), aditivo = sv('reb-aditivo');
+            const esp = (v('reb-esp') || 2) / 100;
             const el = document.getElementById('res-reboco');
             if (!area) { el.innerHTML = '<p class="text-slate-400 text-center text-sm">Preencha a área.</p>'; return; }
             const vol = area * esp * LOSS;
-            const tracos = { chapisco: { c: 1, cal: 0, a: 3, nome: 'Chapisco 1:3' }, reboco: { c: 1, cal: 2, a: 9, nome: 'Reboco 1:2:9' }, emboco: { c: 1, cal: 1, a: 6, nome: 'Emboço 1:1:6' } };
-            const tr = tracos[tipo], soma = tr.c + tr.cal + tr.a;
+
+            let tr;
+            if (tipo === 'custom') {
+                tr = { c: v('reb-tr-c'), cal: v('reb-tr-cal'), a: v('reb-tr-a'), nome: 'Traço Personalizado' };
+            } else {
+                const tracos = {
+                    chapisco: { c: 1, cal: 0, a: 3, nome: 'Chapisco 1:3' },
+                    reboco: { c: 1, cal: 2, a: 9, nome: 'Reboco 1:2:9' },
+                    emboco: { c: 1, cal: 1, a: 6, nome: 'Emboço 1:1:6' }
+                };
+                tr = tracos[tipo];
+            }
+
+            const soma = tr.c + tr.cal + tr.a;
             const volCim = (tr.c / soma) * vol;
             const sacosCim = Math.ceil(volCim / 0.033);
-            const areia = parseFloat(((tr.a / soma) * vol).toFixed(3));
-            const calSc = tr.cal > 0 ? Math.ceil(((tr.cal / soma) * vol) / 0.025) : 0;
+            let areiaM3 = (tr.a / soma) * vol;
+            let calSc = 0;
+            let areiaFinaM3 = 0;
+
+            if (aditivo === 'cal') {
+                calSc = tr.cal > 0 ? Math.ceil(((tr.cal / soma) * vol) / 0.025) : 0;
+            } else {
+                // Se areia fina, o "cal" do traço vira areia fina (volume)
+                areiaFinaM3 = (tr.cal / soma) * vol;
+            }
 
             const pcim = v('reb-p-cim'), pcal = v('reb-p-cal'), pareia = v('reb-p-areia');
-            const cCim = pcim ? sacosCim * pcim : 0, cCal = pcal ? calSc * pcal : 0, cAreia = pareia ? areia * pareia : 0;
+            const cCim = pcim ? sacosCim * pcim : 0, cCal = pcal ? calSc * pcal : 0, cAreia = pareia ? (areiaM3 + areiaFinaM3) * pareia : 0;
             const totalMat = cCim + cCal + cAreia;
 
             const profQty = v('reb-mo-prof-qty'), profVal = v('reb-mo-prof-val');
@@ -813,18 +984,20 @@
             const total = totalMat + cProf + cServ;
 
             R.reboco = {
-                area, tipo: tr.nome, sacosCim, calSc, areia, cCim, cCal, cAreia, totalMat,
-                profQty, profVal, servQty, servVal, dias, cProf, cServ, total
+                area, tipo: tr.nome, sacosCim, calSc, areia: areiaM3 + areiaFinaM3, areiaFina: areiaFinaM3, aditivo,
+                cCim, cCal, cAreia, totalMat, profQty, profVal, servQty, servVal, dias, cProf, cServ, total
             };
             const items = [
                 { label: 'Área total', value: fmt(area), unit: 'm²' },
                 { label: 'Sacos de Cimento (50kg)', value: sacosCim, unit: 'sacos', cost: cCim || 0 },
             ];
-            if (calSc > 0) items.push({ label: 'Cal Hidratada (saco 20kg)', value: calSc, unit: 'sacos', cost: cCal || 0 });
-            items.push({ label: 'Areia', value: fmt(areia, 3), unit: 'm³', cost: cAreia || 0 });
+            if (aditivo === 'cal' && calSc > 0) items.push({ label: 'Cal Hidratada (saco 20kg)', value: calSc, unit: 'sacos', cost: cCal || 0 });
+            if (aditivo === 'areia_fina' && areiaFinaM3 > 0) items.push({ label: 'Areia Fina (extra)', value: fmt(areiaFinaM3, 3), unit: 'm³', cost: areiaFinaM3 * pareia });
+            items.push({ label: 'Areia Média', value: fmt(areiaM3, 3), unit: 'm³', cost: areiaM3 * pareia });
+
             if (profQty > 0 && profVal > 0) items.push({ label: `👷 Pedreiro (${profQty}×R$${fmt(profVal, 2)}×${dias}d)`, value: fmt(cProf, 2), unit: 'R$' });
             if (servQty > 0 && servVal > 0) items.push({ label: `🧹 Servente (${servQty}×R$${fmt(servVal, 2)}×${dias}d)`, value: fmt(cServ, 2), unit: 'R$' });
-            el.innerHTML = resultHTML('Resultado — ' + tr.nome, '🪣', items, total > 0 ? total : 0);
+            el.innerHTML = resultHTML('Resultado — ' + tr.nome, '🪣', items, total > 1 ? total : 0);
         }
 
         // ===== CONCRETO =====
@@ -836,8 +1009,22 @@
             ['con-label1', 'con-label2', 'con-label3'].forEach((id, i) => document.getElementById(id).textContent = lbs[tipo][i]);
             if (!d1 || !d2 || !d3) { el.innerHTML = '<p class="text-slate-400 text-center text-sm">Preencha as dimensões.</p>'; return; }
             const vol = d1 * d2 * d3 * LOSS;
-            const consumos = { '20': { cimento: 340, areia: 680, brita: 1020, nome: 'C20 — 1:2:3' }, '25': { cimento: 380, areia: 760, brita: 950, nome: 'C25 — 1:2:2.5' }, '30': { cimento: 420, areia: 630, brita: 1050, nome: 'C30 — 1:1.5:2.5' } };
-            const c = consumos[fck];
+
+            let c;
+            if (fck === 'custom') {
+                const trC = v('con-tr-c'), trA = v('con-tr-a'), trB = v('con-tr-b');
+                // Estimativa simples baseada na soma das partes (traço de obra ~1400kg/m3 areia, 1500kg/m3 brita)
+                // Cimento ~350kg/m3 é padrão base.
+                c = { cimento: 350, areia: 350 * trA, brita: 350 * trB, nome: `Personalizado ${trC}:${trA}:${trB}` };
+            } else {
+                const consumos = {
+                    '20': { cimento: 320, areia: 800, brita: 1120, nome: 'C20 (1:2.5:3.5)' },
+                    '25': { cimento: 360, areia: 720, brita: 1080, nome: 'C25 (1:2:3)' },
+                    '30': { cimento: 400, areia: 600, brita: 1000, nome: 'C30 (1:1.5:2.5)' }
+                };
+                c = consumos[fck];
+            }
+
             const sacosCim = Math.ceil((c.cimento * vol) / 50);
             const areia = parseFloat(((c.areia * vol) / 1500).toFixed(3));
             const brita = parseFloat(((c.brita * vol) / 1400).toFixed(3));
@@ -864,7 +1051,7 @@
             ];
             if (profQty > 0 && profVal > 0) items.push({ label: `👷 Pedreiro (${profQty}×R$${fmt(profVal, 2)}×${dias}d)`, value: fmt(cProf, 2), unit: 'R$' });
             if (servQty > 0 && servVal > 0) items.push({ label: `🧹 Servente (${servQty}×R$${fmt(servVal, 2)}×${dias}d)`, value: fmt(cServ, 2), unit: 'R$' });
-            el.innerHTML = resultHTML('Resultado — ' + c.nome, '🏗️', items, total > 0 ? total : 0);
+            el.innerHTML = resultHTML('Resultado — ' + c.nome, '🏗️', items, total > 1 ? total : 0);
         }
 
         // ===== PISO =====
@@ -877,13 +1064,27 @@
             const areaC = area * LOSS;
             const pecas = Math.ceil(areaC / tamPeca);
             const caixas = Math.ceil(pecas / pcaixaEl);
-            const kgM2 = { simples: 4, colante: 5, acii: 6 }[argTipo];
-            const argKg = Math.ceil(areaC * kgM2);
-            const rejKg = Math.ceil(areaC * 0.5);
 
-            const pcaixa = v('piso-p-caixa'), parg = v('piso-p-arg'), prej = v('piso-p-rej');
-            const cCaixa = pcaixa ? caixas * pcaixa : 0, cArg = parg ? argKg * parg : 0, cRej = prej ? rejKg * prej : 0;
-            const totalMat = cCaixa + cArg + cRej;
+            let sacosCim = 0, areiaM3 = 0, argKg = 0, totalMat = 0, cCaixa = 0, cArg = 0, cRej = 0;
+            const pcaixa = v('piso-p-caixa'), parg = v('piso-p-arg'), prej = v('piso-p-rej'), pcim = v('reb-p-cim'), pareia = v('reb-p-areia');
+            cCaixa = pcaixa ? caixas * pcaixa : 0;
+            const rejKg = Math.ceil(areaC * 0.5);
+            cRej = prej ? rejKg * prej : 0;
+
+            if (argTipo === 'custom') {
+                const trC = v('piso-tr-c'), trA = v('piso-tr-a');
+                // Traço de obra (espessura média 2cm)
+                const vol = areaC * 0.02;
+                const soma = trC + trA;
+                sacosCim = Math.ceil(((trC / soma) * vol) / 0.033);
+                areiaM3 = (trA / soma) * vol;
+                totalMat = cCaixa + (sacosCim * (pcim || 0)) + (areiaM3 * (pareia || 0)) + cRej;
+            } else {
+                const kgM2 = { simples: 4, colante: 5, acii: 6 }[argTipo];
+                argKg = Math.ceil(areaC * kgM2);
+                cArg = parg ? argKg * parg : 0;
+                totalMat = cCaixa + cArg + cRej;
+            }
 
             const profQty = v('piso-mo-prof-qty'), profVal = v('piso-mo-prof-val');
             const servQty = v('piso-mo-serv-qty'), servVal = v('piso-mo-serv-val');
@@ -892,19 +1093,25 @@
             const total = totalMat + cProf + cServ;
 
             R.piso = {
-                area, pecas, caixas, argKg, rejKg, cCaixa, cArg, cRej, totalMat,
+                area, pecas, caixas, argKg, rejKg, cCaixa, cArg, cRej, sacosCim, areia: areiaM3, totalMat,
                 profQty, profVal, servQty, servVal, dias, cProf, cServ, total
             };
             const items = [
                 { label: 'Área com margem', value: fmt(areaC), unit: 'm²' },
                 { label: 'Peças', value: pecas.toLocaleString('pt-BR'), unit: 'unid.' },
-                { label: 'Caixas', value: caixas, unit: 'caixas', cost: cCaixa || 0 },
-                { label: 'Argamassa', value: argKg, unit: 'kg', cost: cArg || 0 },
-                { label: 'Rejunte', value: rejKg, unit: 'kg', cost: cRej || 0 },
+                { label: 'Caixas de Piso', value: caixas, unit: 'caixas', cost: cCaixa || 0 },
             ];
+            if (argTipo === 'custom') {
+                items.push({ label: 'Cimento (50kg)', value: sacosCim, unit: 'sacos' });
+                items.push({ label: 'Areia Média', value: fmt(areiaM3, 3), unit: 'm³' });
+            } else {
+                items.push({ label: 'Argamassa Industrial', value: argKg, unit: 'kg', cost: cArg || 0 });
+            }
+            items.push({ label: 'Rejunte', value: rejKg, unit: 'kg', cost: cRej || 0 });
+
             if (profQty > 0 && profVal > 0) items.push({ label: `👷 Pedreiro (${profQty}×R$${fmt(profVal, 2)}×${dias}d)`, value: fmt(cProf, 2), unit: 'R$' });
             if (servQty > 0 && servVal > 0) items.push({ label: `🧹 Servente (${servQty}×R$${fmt(servVal, 2)}×${dias}d)`, value: fmt(cServ, 2), unit: 'R$' });
-            el.innerHTML = resultHTML('Resultado — Piso/Revestimento', '🔲', items, total > 0 ? total : 0);
+            el.innerHTML = resultHTML('Resultado — Piso/Revestimento', '🔲', items, total > 1 ? total : 0);
         }
 
         // ===== ELÉTRICA =====
@@ -1027,8 +1234,12 @@
                     { label: 'Área', val: `${fmt(r.reboco.area)} m²` },
                     { label: 'Cimento (50kg)', val: `${r.reboco.sacosCim} sacos`, cost: r.reboco.cCim || 0 },
                 ];
-                if (r.reboco.calSc > 0) rows.push({ label: 'Cal (saco 20kg)', val: `${r.reboco.calSc} sacos`, cost: r.reboco.cCal || 0 });
-                rows.push({ label: 'Areia', val: `${fmt(r.reboco.areia, 3)} m³`, cost: r.reboco.cAreia || 0 });
+                if (r.reboco.aditivo === 'cal' && r.reboco.calSc > 0) {
+                    rows.push({ label: 'Cal (saco 20kg)', val: `${r.reboco.calSc} sacos`, cost: r.reboco.cCal || 0 });
+                } else if (r.reboco.aditivo === 'areia_fina' && r.reboco.areiaFina > 0) {
+                    rows.push({ label: 'Areia Fina (extra)', val: `${fmt(r.reboco.areiaFina, 3)} m³`, cost: r.reboco.cAreia || 0 });
+                }
+                rows.push({ label: 'Areia Média', val: `${fmt(r.reboco.areia - (r.reboco.areiaFina || 0), 3)} m³`, cost: r.reboco.cAreia || 0 });
                 if (r.reboco.profQty > 0 && r.reboco.profVal > 0) rows.push({ label: `👷 Pedreiro (${r.reboco.profQty}×R$${fmt(r.reboco.profVal, 2)}×${r.reboco.dias}d)`, val: cur(r.reboco.cProf) });
                 if (r.reboco.servQty > 0 && r.reboco.servVal > 0) rows.push({ label: `🧹 Servente (${r.reboco.servQty}×R$${fmt(r.reboco.servVal, 2)}×${r.reboco.dias}d)`, val: cur(r.reboco.cServ) });
                 html += secao(`🪣 ${r.reboco.tipo}`, rows, r.reboco.total);
@@ -1047,10 +1258,15 @@
             if (r.piso) {
                 const rows = [
                     { label: 'Peças', val: `${r.piso.pecas.toLocaleString('pt-BR')} unid.` },
-                    { label: 'Caixas', val: `${r.piso.caixas} caixas`, cost: r.piso.cCaixa || 0 },
-                    { label: 'Argamassa', val: `${r.piso.argKg} kg`, cost: r.piso.cArg || 0 },
-                    { label: 'Rejunte', val: `${r.piso.rejKg} kg`, cost: r.piso.cRej || 0 },
+                    { label: 'Caixas de Piso', val: `${r.piso.caixas} caixas`, cost: r.piso.cCaixa || 0 },
                 ];
+                if (r.piso.argKg > 0) {
+                    rows.push({ label: 'Argamassa Industrial', val: `${r.piso.argKg} kg`, cost: r.piso.cArg || 0 });
+                } else {
+                    rows.push({ label: 'Cimento (50kg)', val: `${r.piso.sacosCim} sacos` });
+                    rows.push({ label: 'Areia Média', val: `${fmt(r.piso.areia, 3)} m³` });
+                }
+                rows.push({ label: 'Rejunte', val: `${r.piso.rejKg} kg`, cost: r.piso.cRej || 0 });
                 if (r.piso.profQty > 0 && r.piso.profVal > 0) rows.push({ label: `👷 Pedreiro (${r.piso.profQty}×R$${fmt(r.piso.profVal, 2)}×${r.piso.dias}d)`, val: cur(r.piso.cProf) });
                 if (r.piso.servQty > 0 && r.piso.servVal > 0) rows.push({ label: `🧹 Servente (${r.piso.servQty}×R$${fmt(r.piso.servVal, 2)}×${r.piso.dias}d)`, val: cur(r.piso.cServ) });
                 html += secao('🔲 Piso/Revestimento', rows, r.piso.total);
