@@ -106,33 +106,76 @@
         <!-- =================== ALVENARIA =================== -->
         <section id="sec-alvenaria" class="section-panel">
             <div class="grid md:grid-cols-2 gap-6">
-                <div class="bg-white rounded-2xl shadow-md p-6 space-y-4">
+                <div class="bg-white rounded-2xl shadow-md p-6 space-y-4 overflow-y-auto max-h-[82vh]">
                     <h2 class="text-lg font-bold text-slate-800">🧱 Dados da Alvenaria</h2>
-                    <div>
-                        <label class="lbl">Comprimento da parede (m)</label>
-                        <input type="number" id="alv-comp" min="0" step="0.01" placeholder="Ex: 10"
-                            oninput="calcAlvenaria()" class="inp" />
+
+                    <!-- DIMENSÕES -->
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="lbl">Comprimento (m)</label>
+                            <input type="number" id="alv-comp" min="0" step="0.01" placeholder="Ex: 10"
+                                oninput="calcAlvenaria()" class="inp" />
+                        </div>
+                        <div>
+                            <label class="lbl">Altura (m)</label>
+                            <input type="number" id="alv-alt" min="0" step="0.01" placeholder="Ex: 2.8"
+                                oninput="calcAlvenaria()" class="inp" />
+                        </div>
                     </div>
-                    <div>
-                        <label class="lbl">Altura da parede (m)</label>
-                        <input type="number" id="alv-alt" min="0" step="0.01" placeholder="Ex: 2.8"
-                            oninput="calcAlvenaria()" class="inp" />
-                    </div>
+
+                    <!-- TIPO DE TIJOLO -->
                     <div>
                         <label class="lbl">Tipo de tijolo</label>
-                        <select id="alv-tipo" onchange="calcAlvenaria()" class="inp bg-white">
-                            <option value="ceramico6">Cerâmico 6 furos (19x9x9cm) — ~35 tj/m²</option>
-                            <option value="ceramico8">Cerâmico 8 furos (19x19x9cm) — ~20 tj/m²</option>
-                            <option value="macico">Tijolo Maciço (19x9x5cm) — ~65 tj/m²</option>
-                            <option value="bloco_concreto">Bloco de Concreto — ~13 bl/m²</option>
+                        <select id="alv-tipo" onchange="alvTijoloChange()" class="inp bg-white">
+                            <option value="ceramico6">Cerâmico 6 furos (19x9x9cm) — 35 tj/m²</option>
+                            <option value="ceramico8">Cerâmico 8 furos (19x19x9cm) — 20 tj/m²</option>
+                            <option value="macico">Tijolo Maciço (19x9x5cm) — 65 tj/m²</option>
+                            <option value="bloco_concreto">Bloco de Concreto (14x19x39cm) — 13 bl/m²</option>
+                            <option value="custom">➕ Personalizado...</option>
                         </select>
                     </div>
+                    <!-- Tijolo personalizado -->
+                    <div id="alv-custom-box"
+                        class="hidden bg-slate-50 border border-slate-200 rounded-xl p-3 space-y-2">
+                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Tijolo Personalizado</p>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div><label class="lbl">Nome</label><input type="text" id="alv-custom-nome"
+                                    placeholder="Ex: Bloco estrutural" oninput="calcAlvenaria()" class="inp" /></div>
+                            <div><label class="lbl">Qtd por m²</label><input type="number" id="alv-custom-qty" min="1"
+                                    step="1" placeholder="Ex: 25" oninput="calcAlvenaria()" class="inp" /></div>
+                        </div>
+                    </div>
+
+                    <!-- TRAÇO -->
+                    <div>
+                        <label class="lbl">Traço do assentamento (cimento : areia)</label>
+                        <select id="alv-traco" onchange="alvTracoChange()" class="inp bg-white">
+                            <option value="1:3">1:3 — Padrão NBR (recomendado)</option>
+                            <option value="1:4">1:4 — Econômico</option>
+                            <option value="1:2">1:2 — Reforçado</option>
+                            <option value="custom">➕ Personalizado...</option>
+                        </select>
+                    </div>
+                    <!-- Traço personalizado -->
+                    <div id="alv-traco-custom-box" class="hidden bg-slate-50 border border-slate-200 rounded-xl p-3">
+                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-2">Traço Personalizado
+                        </p>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div><label class="lbl">Partes de cimento</label><input type="number" id="alv-traco-c"
+                                    min="1" step="0.5" value="1" oninput="calcAlvenaria()" class="inp" /></div>
+                            <div><label class="lbl">Partes de areia</label><input type="number" id="alv-traco-a" min="1"
+                                    step="0.5" value="3" oninput="calcAlvenaria()" class="inp" /></div>
+                        </div>
+                    </div>
+
+                    <!-- PREÇOS DE MATERIAL -->
                     <div class="border-t border-slate-100 pt-4">
-                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">💰 Preços Unitários
-                            (R$)</p>
+                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">💰 Preços de
+                            Materiais (R$)</p>
                         <div class="grid grid-cols-2 gap-3">
-                            <div><label class="lbl">Tijolo (por unid.)</label><input type="number" id="alv-p-tj" min="0"
-                                    step="0.01" placeholder="0,00" oninput="calcAlvenaria()" class="inp" /></div>
+                            <div><label class="lbl">Tijolo/Bloco (unid.)</label><input type="number" id="alv-p-tj"
+                                    min="0" step="0.01" placeholder="0,00" oninput="calcAlvenaria()" class="inp" />
+                            </div>
                             <div><label class="lbl">Cimento (saco 50kg)</label><input type="number" id="alv-p-cim"
                                     min="0" step="0.01" placeholder="0,00" oninput="calcAlvenaria()" class="inp" />
                             </div>
@@ -140,9 +183,42 @@
                                     step="0.01" placeholder="0,00" oninput="calcAlvenaria()" class="inp" /></div>
                         </div>
                     </div>
+
+                    <!-- MÃO DE OBRA -->
+                    <div class="border-t border-slate-100 pt-4">
+                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">👷 Mão de Obra</p>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="lbl">Nº de Pedreiros</label>
+                                <input type="number" id="alv-mo-prof-qty" min="0" step="1" value="1"
+                                    oninput="calcAlvenaria()" class="inp" />
+                            </div>
+                            <div>
+                                <label class="lbl">Diária Pedreiro (R$)</label>
+                                <input type="number" id="alv-mo-prof-val" min="0" step="0.01" placeholder="Ex: 250,00"
+                                    oninput="calcAlvenaria()" class="inp" />
+                            </div>
+                            <div>
+                                <label class="lbl">Nº de Serventes</label>
+                                <input type="number" id="alv-mo-serv-qty" min="0" step="1" value="1"
+                                    oninput="calcAlvenaria()" class="inp" />
+                            </div>
+                            <div>
+                                <label class="lbl">Diária Servente (R$)</label>
+                                <input type="number" id="alv-mo-serv-val" min="0" step="0.01" placeholder="Ex: 150,00"
+                                    oninput="calcAlvenaria()" class="inp" />
+                            </div>
+                            <div class="col-span-2">
+                                <label class="lbl">Nº de Dias de Serviço</label>
+                                <input type="number" id="alv-mo-dias" min="1" step="1" value="1"
+                                    oninput="calcAlvenaria()" class="inp" />
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="bg-amber-50 border border-amber-200 rounded-xl p-3">
-                        <p class="text-xs text-amber-700 font-medium">ℹ️ Traço 1:3 (cimento:areia). Margem de 10%
-                            aplicada.</p>
+                        <p class="text-xs text-amber-700 font-medium">ℹ️ Traço configurável. Margem de 10% aplicada nos
+                            materiais.</p>
                     </div>
                 </div>
                 <div id="res-alvenaria" class="bg-white rounded-2xl shadow-md p-6 flex items-center justify-center">
@@ -487,29 +563,89 @@
   </div>`;
         }
 
+        // ===== ALVENARIA — helpers de UI =====
+        function alvTijoloChange() {
+            const tipo = sv('alv-tipo');
+            document.getElementById('alv-custom-box').classList.toggle('hidden', tipo !== 'custom');
+            calcAlvenaria();
+        }
+        function alvTracoChange() {
+            const tr = sv('alv-traco');
+            document.getElementById('alv-traco-custom-box').classList.toggle('hidden', tr !== 'custom');
+            calcAlvenaria();
+        }
+
         // ===== ALVENARIA =====
         function calcAlvenaria() {
-            const comp = v('alv-comp'), alt = v('alv-alt'), tipo = sv('alv-tipo');
+            const comp = v('alv-comp'), alt = v('alv-alt');
             const el = document.getElementById('res-alvenaria');
             if (!comp || !alt) { el.innerHTML = '<p class="text-slate-400 text-center text-sm">Preencha comprimento e altura.</p>'; return; }
             const area = comp * alt;
-            const pM2 = { ceramico6: 35, ceramico8: 20, macico: 65, bloco_concreto: 13 };
-            const qtdTij = Math.ceil(area * pM2[tipo] * LOSS);
+
+            // Tijolo
+            const tipoVal = sv('alv-tipo');
+            const pM2Std = { ceramico6: 35, ceramico8: 20, macico: 65, bloco_concreto: 13 };
+            let pM2, tijoloNome;
+            if (tipoVal === 'custom') {
+                pM2 = v('alv-custom-qty') || 25;
+                tijoloNome = document.getElementById('alv-custom-nome').value || 'Personalizado';
+            } else {
+                pM2 = pM2Std[tipoVal];
+                tijoloNome = document.getElementById('alv-tipo').options[document.getElementById('alv-tipo').selectedIndex].text.split('—')[0].trim();
+            }
+            const qtdTij = Math.ceil(area * pM2 * LOSS);
+
+            // Traço
+            const tracoVal = sv('alv-traco');
+            let partC, partA;
+            if (tracoVal === 'custom') {
+                partC = v('alv-traco-c') || 1;
+                partA = v('alv-traco-a') || 3;
+            } else {
+                [partC, partA] = tracoVal.split(':').map(Number);
+            }
+            const soma = partC + partA;
+            // vol argamassa: ~0.012 m³/m² por cm de espessura (junta ~1cm)
             const vol_arg = area * 0.012 * LOSS;
-            const sacosCim = Math.ceil(vol_arg / 0.033);
-            const areia = parseFloat((vol_arg * 0.75).toFixed(3));
+            const sacosCim = Math.ceil(vol_arg * (partC / soma) / 0.033);
+            const areia = parseFloat((vol_arg * (partA / soma)).toFixed(3));
+            const tracoLabel = tracoVal === 'custom' ? `${partC}:${partA} (personalizado)` : tracoVal;
 
+            // Custos de material
             const ptj = v('alv-p-tj'), pcim = v('alv-p-cim'), pareia = v('alv-p-areia');
-            const cTj = ptj ? qtdTij * ptj : 0, cCim = pcim ? sacosCim * pcim : 0, cAreia = pareia ? areia * pareia : 0;
-            const total = (cTj || pcim || pareia) ? cTj + cCim + cAreia : 0;
+            const cTj = ptj ? qtdTij * ptj : 0;
+            const cCim = pcim ? sacosCim * pcim : 0;
+            const cAreia = pareia ? areia * pareia : 0;
+            const totalMat = cTj + cCim + cAreia;
 
-            R.alvenaria = { area, qtdTij, sacosCim, areia, ptj, pcim, pareia, cTj, cCim, cAreia, total };
-            el.innerHTML = resultHTML('Resultado — Alvenaria', '🧱', [
+            // Mão de obra
+            const profQty = v('alv-mo-prof-qty'), profVal = v('alv-mo-prof-val');
+            const servQty = v('alv-mo-serv-qty'), servVal = v('alv-mo-serv-val');
+            const dias = v('alv-mo-dias') || 1;
+            const cProf = profQty * profVal * dias;
+            const cServ = servQty * servVal * dias;
+            const totalMO = cProf + cServ;
+            const total = totalMat + totalMO;
+
+            R.alvenaria = {
+                area, qtdTij, tijoloNome, tracoLabel, sacosCim, areia,
+                ptj, pcim, pareia, cTj, cCim, cAreia, totalMat,
+                profQty, profVal, servQty, servVal, dias, cProf, cServ, totalMO, total
+            };
+
+            const items = [
                 { label: 'Área da parede', value: fmt(area), unit: 'm²' },
-                { label: 'Tijolos/Blocos', value: qtdTij.toLocaleString('pt-BR'), unit: 'unid.', cost: cTj || 0 },
-                { label: 'Sacos de Cimento (50kg)', value: sacosCim, unit: 'sacos', cost: cCim || 0 },
+                { label: `${tijoloNome} (${pM2}/m² — traço ${tracoLabel})`, value: qtdTij.toLocaleString('pt-BR'), unit: 'unid.', cost: cTj || 0 },
+                { label: 'Sacos de Cimento 50kg', value: sacosCim, unit: 'sacos', cost: cCim || 0 },
                 { label: 'Areia', value: fmt(areia, 3), unit: 'm³', cost: cAreia || 0 },
-            ], total);
+            ];
+            // Mão de obra rows
+            if (profQty > 0 && profVal > 0)
+                items.push({ label: `👷 Pedreiro (${profQty} × R$${fmt(profVal, 2)} × ${dias}d)`, value: fmt(cProf, 2), unit: 'R$' });
+            if (servQty > 0 && servVal > 0)
+                items.push({ label: `🧹 Servente (${servQty} × R$${fmt(servVal, 2)} × ${dias}d)`, value: fmt(cServ, 2), unit: 'R$' });
+
+            el.innerHTML = resultHTML('Resultado — Alvenaria', '🧱', items, total > 0 ? total : 0);
         }
 
         // ===== REBOCO =====
@@ -653,11 +789,17 @@
             const r = R;
 
             if (r.alvenaria) {
+                const aMoRows = [];
+                if (r.alvenaria.profQty > 0 && r.alvenaria.profVal > 0)
+                    aMoRows.push({ label: `👷 Pedreiro (${r.alvenaria.profQty} × R$${fmt(r.alvenaria.profVal, 2)} × ${r.alvenaria.dias}d)`, val: cur(r.alvenaria.cProf), cost: r.alvenaria.cProf });
+                if (r.alvenaria.servQty > 0 && r.alvenaria.servVal > 0)
+                    aMoRows.push({ label: `🧹 Servente (${r.alvenaria.servQty} × R$${fmt(r.alvenaria.servVal, 2)} × ${r.alvenaria.dias}d)`, val: cur(r.alvenaria.cServ), cost: r.alvenaria.cServ });
                 html += secao('🧱 Alvenaria', [
-                    { label: `Área da parede`, val: `${fmt(r.alvenaria.area)} m²` },
-                    { label: 'Tijolos/Blocos', val: `${r.alvenaria.qtdTij.toLocaleString('pt-BR')} unid.`, cost: r.alvenaria.cTj || 0 },
+                    { label: 'Área da parede', val: `${fmt(r.alvenaria.area)} m²` },
+                    { label: `${r.alvenaria.tijoloNome} — traço ${r.alvenaria.tracoLabel}`, val: `${r.alvenaria.qtdTij.toLocaleString('pt-BR')} unid.`, cost: r.alvenaria.cTj || 0 },
                     { label: 'Cimento (50kg)', val: `${r.alvenaria.sacosCim} sacos`, cost: r.alvenaria.cCim || 0 },
                     { label: 'Areia', val: `${fmt(r.alvenaria.areia, 3)} m³`, cost: r.alvenaria.cAreia || 0 },
+                    ...aMoRows,
                 ], r.alvenaria.total);
             }
             if (r.reboco) {
