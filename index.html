@@ -230,7 +230,7 @@
         <!-- =================== REBOCO =================== -->
         <section id="sec-reboco" class="section-panel hidden">
             <div class="grid md:grid-cols-2 gap-6">
-                <div class="bg-white rounded-2xl shadow-md p-6 space-y-4">
+                <div class="bg-white rounded-2xl shadow-md p-6 space-y-4 overflow-y-auto max-h-[82vh]">
                     <h2 class="text-lg font-bold text-slate-800">🪣 Reboco / Chapisco</h2>
                     <div>
                         <label class="lbl">Área total (m²)</label>
@@ -251,8 +251,8 @@
                             class="inp" />
                     </div>
                     <div class="border-t border-slate-100 pt-4">
-                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">💰 Preços Unitários
-                            (R$)</p>
+                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">💰 Preços de
+                            Materiais (R$)</p>
                         <div class="grid grid-cols-2 gap-3">
                             <div><label class="lbl">Cimento (saco 50kg)</label><input type="number" id="reb-p-cim"
                                     min="0" step="0.01" placeholder="0,00" oninput="calcReboco()" class="inp" /></div>
@@ -260,6 +260,24 @@
                                     step="0.01" placeholder="0,00" oninput="calcReboco()" class="inp" /></div>
                             <div><label class="lbl">Areia (m³)</label><input type="number" id="reb-p-areia" min="0"
                                     step="0.01" placeholder="0,00" oninput="calcReboco()" class="inp" /></div>
+                        </div>
+                    </div>
+                    <div class="border-t border-slate-100 pt-4">
+                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">👷 Mão de Obra</p>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div><label class="lbl">Nº de Pedreiros</label><input type="number" id="reb-mo-prof-qty"
+                                    min="0" step="1" value="1" oninput="calcReboco()" class="inp" /></div>
+                            <div><label class="lbl">Diária Pedreiro (R$)</label><input type="number"
+                                    id="reb-mo-prof-val" min="0" step="0.01" placeholder="Ex: 250,00"
+                                    oninput="calcReboco()" class="inp" /></div>
+                            <div><label class="lbl">Nº de Serventes</label><input type="number" id="reb-mo-serv-qty"
+                                    min="0" step="1" value="1" oninput="calcReboco()" class="inp" /></div>
+                            <div><label class="lbl">Diária Servente (R$)</label><input type="number"
+                                    id="reb-mo-serv-val" min="0" step="0.01" placeholder="Ex: 150,00"
+                                    oninput="calcReboco()" class="inp" /></div>
+                            <div class="col-span-2"><label class="lbl">Nº de Dias de Serviço</label><input type="number"
+                                    id="reb-mo-dias" min="1" step="1" value="1" oninput="calcReboco()" class="inp" />
+                            </div>
                         </div>
                     </div>
                     <div class="bg-amber-50 border border-amber-200 rounded-xl p-3">
@@ -275,7 +293,7 @@
         <!-- =================== CONCRETO =================== -->
         <section id="sec-concreto" class="section-panel hidden">
             <div class="grid md:grid-cols-2 gap-6">
-                <div class="bg-white rounded-2xl shadow-md p-6 space-y-4">
+                <div class="bg-white rounded-2xl shadow-md p-6 space-y-4 overflow-y-auto max-h-[82vh]">
                     <h2 class="text-lg font-bold text-slate-800">🏗️ Concreto Estrutural</h2>
                     <div>
                         <label class="lbl">Tipo de elemento</label>
@@ -302,8 +320,8 @@
                         </select>
                     </div>
                     <div class="border-t border-slate-100 pt-4">
-                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">💰 Preços Unitários
-                            (R$)</p>
+                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">💰 Preços de
+                            Materiais (R$)</p>
                         <div class="grid grid-cols-2 gap-3">
                             <div><label class="lbl">Cimento (saco 50kg)</label><input type="number" id="con-p-cim"
                                     min="0" step="0.01" placeholder="0,00" oninput="calcConcreto()" class="inp" /></div>
@@ -311,6 +329,24 @@
                                     step="0.01" placeholder="0,00" oninput="calcConcreto()" class="inp" /></div>
                             <div><label class="lbl">Brita (m³)</label><input type="number" id="con-p-brita" min="0"
                                     step="0.01" placeholder="0,00" oninput="calcConcreto()" class="inp" /></div>
+                        </div>
+                    </div>
+                    <div class="border-t border-slate-100 pt-4">
+                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">👷 Mão de Obra</p>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div><label class="lbl">Nº de Pedreiros</label><input type="number" id="con-mo-prof-qty"
+                                    min="0" step="1" value="1" oninput="calcConcreto()" class="inp" /></div>
+                            <div><label class="lbl">Diária Pedreiro (R$)</label><input type="number"
+                                    id="con-mo-prof-val" min="0" step="0.01" placeholder="Ex: 250,00"
+                                    oninput="calcConcreto()" class="inp" /></div>
+                            <div><label class="lbl">Nº de Serventes</label><input type="number" id="con-mo-serv-qty"
+                                    min="0" step="1" value="1" oninput="calcConcreto()" class="inp" /></div>
+                            <div><label class="lbl">Diária Servente (R$)</label><input type="number"
+                                    id="con-mo-serv-val" min="0" step="0.01" placeholder="Ex: 150,00"
+                                    oninput="calcConcreto()" class="inp" /></div>
+                            <div class="col-span-2"><label class="lbl">Nº de Dias de Serviço</label><input type="number"
+                                    id="con-mo-dias" min="1" step="1" value="1" oninput="calcConcreto()" class="inp" />
+                            </div>
                         </div>
                     </div>
                     <div class="bg-amber-50 border border-amber-200 rounded-xl p-3">
@@ -327,7 +363,7 @@
         <!-- =================== PISO =================== -->
         <section id="sec-piso" class="section-panel hidden">
             <div class="grid md:grid-cols-2 gap-6">
-                <div class="bg-white rounded-2xl shadow-md p-6 space-y-4">
+                <div class="bg-white rounded-2xl shadow-md p-6 space-y-4 overflow-y-auto max-h-[82vh]">
                     <h2 class="text-lg font-bold text-slate-800">🔲 Piso e Revestimento</h2>
                     <div>
                         <label class="lbl">Área a revestir (m²)</label>
@@ -360,8 +396,8 @@
                         </select>
                     </div>
                     <div class="border-t border-slate-100 pt-4">
-                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">💰 Preços Unitários
-                            (R$)</p>
+                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">💰 Preços de
+                            Materiais (R$)</p>
                         <div class="grid grid-cols-2 gap-3">
                             <div><label class="lbl">Caixa de piso</label><input type="number" id="piso-p-caixa" min="0"
                                     step="0.01" placeholder="0,00" oninput="calcPiso()" class="inp" /></div>
@@ -369,6 +405,24 @@
                                     step="0.01" placeholder="0,00" oninput="calcPiso()" class="inp" /></div>
                             <div><label class="lbl">Rejunte (kg)</label><input type="number" id="piso-p-rej" min="0"
                                     step="0.01" placeholder="0,00" oninput="calcPiso()" class="inp" /></div>
+                        </div>
+                    </div>
+                    <div class="border-t border-slate-100 pt-4">
+                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">👷 Mão de Obra</p>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div><label class="lbl">Nº de Ladrilheiros</label><input type="number" id="piso-mo-prof-qty"
+                                    min="0" step="1" value="1" oninput="calcPiso()" class="inp" /></div>
+                            <div><label class="lbl">Diária Ladrilheiro (R$)</label><input type="number"
+                                    id="piso-mo-prof-val" min="0" step="0.01" placeholder="Ex: 280,00"
+                                    oninput="calcPiso()" class="inp" /></div>
+                            <div><label class="lbl">Nº de Serventes</label><input type="number" id="piso-mo-serv-qty"
+                                    min="0" step="1" value="1" oninput="calcPiso()" class="inp" /></div>
+                            <div><label class="lbl">Diária Servente (R$)</label><input type="number"
+                                    id="piso-mo-serv-val" min="0" step="0.01" placeholder="Ex: 150,00"
+                                    oninput="calcPiso()" class="inp" /></div>
+                            <div class="col-span-2"><label class="lbl">Nº de Dias de Serviço</label><input type="number"
+                                    id="piso-mo-dias" min="1" step="1" value="1" oninput="calcPiso()" class="inp" />
+                            </div>
                         </div>
                     </div>
                     <div class="bg-amber-50 border border-amber-200 rounded-xl p-3">
@@ -385,7 +439,7 @@
         <!-- =================== PINTURA =================== -->
         <section id="sec-pintura" class="section-panel hidden">
             <div class="grid md:grid-cols-2 gap-6">
-                <div class="bg-white rounded-2xl shadow-md p-6 space-y-4">
+                <div class="bg-white rounded-2xl shadow-md p-6 space-y-4 overflow-y-auto max-h-[82vh]">
                     <h2 class="text-lg font-bold text-slate-800">🎨 Pintura</h2>
                     <div>
                         <label class="lbl">Área a pintar (m²)</label>
@@ -415,13 +469,31 @@
                         </select>
                     </div>
                     <div class="border-t border-slate-100 pt-4">
-                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">💰 Preços Unitários
-                            (R$)</p>
+                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">💰 Preços de
+                            Materiais (R$)</p>
                         <div class="grid grid-cols-2 gap-3">
                             <div><label class="lbl">Lata de tinta 18L</label><input type="number" id="pin-p-tinta"
                                     min="0" step="0.01" placeholder="0,00" oninput="calcPintura()" class="inp" /></div>
                             <div><label class="lbl">Lata selador/massa 18L</label><input type="number" id="pin-p-sel"
                                     min="0" step="0.01" placeholder="0,00" oninput="calcPintura()" class="inp" /></div>
+                        </div>
+                    </div>
+                    <div class="border-t border-slate-100 pt-4">
+                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">👷 Mão de Obra</p>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div><label class="lbl">Nº de Pintores</label><input type="number" id="pin-mo-prof-qty"
+                                    min="0" step="1" value="1" oninput="calcPintura()" class="inp" /></div>
+                            <div><label class="lbl">Diária Pintor (R$)</label><input type="number" id="pin-mo-prof-val"
+                                    min="0" step="0.01" placeholder="Ex: 200,00" oninput="calcPintura()" class="inp" />
+                            </div>
+                            <div><label class="lbl">Nº de Serventes</label><input type="number" id="pin-mo-serv-qty"
+                                    min="0" step="1" value="0" oninput="calcPintura()" class="inp" /></div>
+                            <div><label class="lbl">Diária Servente (R$)</label><input type="number"
+                                    id="pin-mo-serv-val" min="0" step="0.01" placeholder="Ex: 150,00"
+                                    oninput="calcPintura()" class="inp" /></div>
+                            <div class="col-span-2"><label class="lbl">Nº de Dias de Serviço</label><input type="number"
+                                    id="pin-mo-dias" min="1" step="1" value="1" oninput="calcPintura()" class="inp" />
+                            </div>
                         </div>
                     </div>
                     <div class="bg-amber-50 border border-amber-200 rounded-xl p-3">
@@ -663,16 +735,27 @@
 
             const pcim = v('reb-p-cim'), pcal = v('reb-p-cal'), pareia = v('reb-p-areia');
             const cCim = pcim ? sacosCim * pcim : 0, cCal = pcal ? calSc * pcal : 0, cAreia = pareia ? areia * pareia : 0;
-            const total = (pcim || pcal || pareia) ? cCim + cCal + cAreia : 0;
+            const totalMat = cCim + cCal + cAreia;
 
-            R.reboco = { area, tipo: tr.nome, sacosCim, calSc, areia, cCim, cCal, cAreia, total };
+            const profQty = v('reb-mo-prof-qty'), profVal = v('reb-mo-prof-val');
+            const servQty = v('reb-mo-serv-qty'), servVal = v('reb-mo-serv-val');
+            const dias = v('reb-mo-dias') || 1;
+            const cProf = profQty * profVal * dias, cServ = servQty * servVal * dias;
+            const total = totalMat + cProf + cServ;
+
+            R.reboco = {
+                area, tipo: tr.nome, sacosCim, calSc, areia, cCim, cCal, cAreia, totalMat,
+                profQty, profVal, servQty, servVal, dias, cProf, cServ, total
+            };
             const items = [
                 { label: 'Área total', value: fmt(area), unit: 'm²' },
                 { label: 'Sacos de Cimento (50kg)', value: sacosCim, unit: 'sacos', cost: cCim || 0 },
             ];
             if (calSc > 0) items.push({ label: 'Cal Hidratada (saco 20kg)', value: calSc, unit: 'sacos', cost: cCal || 0 });
             items.push({ label: 'Areia', value: fmt(areia, 3), unit: 'm³', cost: cAreia || 0 });
-            el.innerHTML = resultHTML('Resultado — ' + tr.nome, '🪣', items, total);
+            if (profQty > 0 && profVal > 0) items.push({ label: `👷 Pedreiro (${profQty}×R$${fmt(profVal, 2)}×${dias}d)`, value: fmt(cProf, 2), unit: 'R$' });
+            if (servQty > 0 && servVal > 0) items.push({ label: `🧹 Servente (${servQty}×R$${fmt(servVal, 2)}×${dias}d)`, value: fmt(cServ, 2), unit: 'R$' });
+            el.innerHTML = resultHTML('Resultado — ' + tr.nome, '🪣', items, total > 0 ? total : 0);
         }
 
         // ===== CONCRETO =====
@@ -692,15 +775,27 @@
 
             const pcim = v('con-p-cim'), pareia = v('con-p-areia'), pbrita = v('con-p-brita');
             const cCim = pcim ? sacosCim * pcim : 0, cAreia = pareia ? areia * pareia : 0, cBrita = pbrita ? brita * pbrita : 0;
-            const total = (pcim || pareia || pbrita) ? cCim + cAreia + cBrita : 0;
+            const totalMat = cCim + cAreia + cBrita;
 
-            R.concreto = { fck: c.nome, vol, sacosCim, areia, brita, cCim, cAreia, cBrita, total };
-            el.innerHTML = resultHTML('Resultado — ' + c.nome, '🏗️', [
+            const profQty = v('con-mo-prof-qty'), profVal = v('con-mo-prof-val');
+            const servQty = v('con-mo-serv-qty'), servVal = v('con-mo-serv-val');
+            const dias = v('con-mo-dias') || 1;
+            const cProf = profQty * profVal * dias, cServ = servQty * servVal * dias;
+            const total = totalMat + cProf + cServ;
+
+            R.concreto = {
+                fck: c.nome, vol, sacosCim, areia, brita, cCim, cAreia, cBrita, totalMat,
+                profQty, profVal, servQty, servVal, dias, cProf, cServ, total
+            };
+            const items = [
                 { label: 'Volume de concreto', value: fmt(vol, 3), unit: 'm³' },
                 { label: 'Sacos de Cimento (50kg)', value: sacosCim, unit: 'sacos', cost: cCim || 0 },
                 { label: 'Areia', value: fmt(areia, 3), unit: 'm³', cost: cAreia || 0 },
                 { label: 'Brita', value: fmt(brita, 3), unit: 'm³', cost: cBrita || 0 },
-            ], total);
+            ];
+            if (profQty > 0 && profVal > 0) items.push({ label: `👷 Pedreiro (${profQty}×R$${fmt(profVal, 2)}×${dias}d)`, value: fmt(cProf, 2), unit: 'R$' });
+            if (servQty > 0 && servVal > 0) items.push({ label: `🧹 Servente (${servQty}×R$${fmt(servVal, 2)}×${dias}d)`, value: fmt(cServ, 2), unit: 'R$' });
+            el.innerHTML = resultHTML('Resultado — ' + c.nome, '🏗️', items, total > 0 ? total : 0);
         }
 
         // ===== PISO =====
@@ -719,16 +814,28 @@
 
             const pcaixa = v('piso-p-caixa'), parg = v('piso-p-arg'), prej = v('piso-p-rej');
             const cCaixa = pcaixa ? caixas * pcaixa : 0, cArg = parg ? argKg * parg : 0, cRej = prej ? rejKg * prej : 0;
-            const total = (pcaixa || parg || prej) ? cCaixa + cArg + cRej : 0;
+            const totalMat = cCaixa + cArg + cRej;
 
-            R.piso = { area, pecas, caixas, argKg, rejKg, cCaixa, cArg, cRej, total };
-            el.innerHTML = resultHTML('Resultado — Piso/Revestimento', '🔲', [
+            const profQty = v('piso-mo-prof-qty'), profVal = v('piso-mo-prof-val');
+            const servQty = v('piso-mo-serv-qty'), servVal = v('piso-mo-serv-val');
+            const dias = v('piso-mo-dias') || 1;
+            const cProf = profQty * profVal * dias, cServ = servQty * servVal * dias;
+            const total = totalMat + cProf + cServ;
+
+            R.piso = {
+                area, pecas, caixas, argKg, rejKg, cCaixa, cArg, cRej, totalMat,
+                profQty, profVal, servQty, servVal, dias, cProf, cServ, total
+            };
+            const items = [
                 { label: 'Área com margem', value: fmt(areaC), unit: 'm²' },
                 { label: 'Peças', value: pecas.toLocaleString('pt-BR'), unit: 'unid.' },
                 { label: 'Caixas', value: caixas, unit: 'caixas', cost: cCaixa || 0 },
                 { label: 'Argamassa', value: argKg, unit: 'kg', cost: cArg || 0 },
                 { label: 'Rejunte', value: rejKg, unit: 'kg', cost: cRej || 0 },
-            ], total);
+            ];
+            if (profQty > 0 && profVal > 0) items.push({ label: `👷 Ladrilheiro (${profQty}×R$${fmt(profVal, 2)}×${dias}d)`, value: fmt(cProf, 2), unit: 'R$' });
+            if (servQty > 0 && servVal > 0) items.push({ label: `🧹 Servente (${servQty}×R$${fmt(servVal, 2)}×${dias}d)`, value: fmt(cServ, 2), unit: 'R$' });
+            el.innerHTML = resultHTML('Resultado — Piso/Revestimento', '🔲', items, total > 0 ? total : 0);
         }
 
         // ===== PINTURA =====
@@ -736,24 +843,26 @@
             const area = v('pin-area'), demaos = parseInt(sv('pin-demaos')) || 2, tipoSel = sv('pin-tipo'), selador = sv('pin-selador');
             const el = document.getElementById('res-pintura');
             if (!area) { el.innerHTML = '<p class="text-slate-400 text-center text-sm">Preencha a área.</p>'; return; }
-
-            // Rendimento por litro por demão
             const rend = { latex: 12, acrilica: 10, esmalte: 14 }[tipoSel];
             const nomes = { latex: 'Látex PVA', acrilica: 'Acrílica', esmalte: 'Esmalte' };
-
-            // Total de litros necessários (área × demãos / rendimento) + 10% perda
             const litrosTinta = area * demaos / rend * LOSS;
             const latasTinta = Math.ceil(litrosTinta / 18);
-
-            // Selador: 1 lata 18L cobre ~50m²
             const latasSelador = selador === 'sim' ? Math.ceil(area / 50) : 0;
 
             const ptinta = v('pin-p-tinta'), psel = v('pin-p-sel');
             const cTinta = ptinta ? latasTinta * ptinta : 0, cSel = psel ? latasSelador * psel : 0;
-            const total = (ptinta || psel) ? cTinta + cSel : 0;
+            const totalMat = cTinta + cSel;
 
-            R.pintura = { area, demaos, tipo: nomes[tipoSel], litrosTinta, latasTinta, latasSelador, cTinta, cSel, total };
+            const profQty = v('pin-mo-prof-qty'), profVal = v('pin-mo-prof-val');
+            const servQty = v('pin-mo-serv-qty'), servVal = v('pin-mo-serv-val');
+            const dias = v('pin-mo-dias') || 1;
+            const cProf = profQty * profVal * dias, cServ = servQty * servVal * dias;
+            const total = totalMat + cProf + cServ;
 
+            R.pintura = {
+                area, demaos, tipo: nomes[tipoSel], litrosTinta, latasTinta, latasSelador,
+                cTinta, cSel, totalMat, profQty, profVal, servQty, servVal, dias, cProf, cServ, total
+            };
             const items = [
                 { label: 'Área a pintar', value: fmt(area), unit: 'm²' },
                 { label: 'Demãos', value: demaos, unit: 'demãos' },
@@ -761,8 +870,9 @@
                 { label: 'Latas de 18L — Tinta', value: latasTinta, unit: 'latas', cost: cTinta || 0 },
             ];
             if (latasSelador > 0) items.push({ label: 'Latas de 18L — Selador/Massa', value: latasSelador, unit: 'latas', cost: cSel || 0 });
-
-            el.innerHTML = resultHTML('Resultado — Pintura', '🎨', items, total);
+            if (profQty > 0 && profVal > 0) items.push({ label: `👷 Pintor (${profQty}×R$${fmt(profVal, 2)}×${dias}d)`, value: fmt(cProf, 2), unit: 'R$' });
+            if (servQty > 0 && servVal > 0) items.push({ label: `🧹 Servente (${servQty}×R$${fmt(servVal, 2)}×${dias}d)`, value: fmt(cServ, 2), unit: 'R$' });
+            el.innerHTML = resultHTML('Resultado — Pintura', '🎨', items, total > 0 ? total : 0);
         }
 
         // ===== RELATÓRIO =====
@@ -809,23 +919,31 @@
                 ];
                 if (r.reboco.calSc > 0) rows.push({ label: 'Cal (saco 20kg)', val: `${r.reboco.calSc} sacos`, cost: r.reboco.cCal || 0 });
                 rows.push({ label: 'Areia', val: `${fmt(r.reboco.areia, 3)} m³`, cost: r.reboco.cAreia || 0 });
+                if (r.reboco.profQty > 0 && r.reboco.profVal > 0) rows.push({ label: `👷 Pedreiro (${r.reboco.profQty}×R$${fmt(r.reboco.profVal, 2)}×${r.reboco.dias}d)`, val: cur(r.reboco.cProf) });
+                if (r.reboco.servQty > 0 && r.reboco.servVal > 0) rows.push({ label: `🧹 Servente (${r.reboco.servQty}×R$${fmt(r.reboco.servVal, 2)}×${r.reboco.dias}d)`, val: cur(r.reboco.cServ) });
                 html += secao(`🪣 ${r.reboco.tipo}`, rows, r.reboco.total);
             }
             if (r.concreto) {
-                html += secao(`🏗️ Concreto ${r.concreto.fck}`, [
+                const rows = [
                     { label: 'Volume', val: `${fmt(r.concreto.vol, 3)} m³` },
                     { label: 'Cimento (50kg)', val: `${r.concreto.sacosCim} sacos`, cost: r.concreto.cCim || 0 },
                     { label: 'Areia', val: `${fmt(r.concreto.areia, 3)} m³`, cost: r.concreto.cAreia || 0 },
                     { label: 'Brita', val: `${fmt(r.concreto.brita, 3)} m³`, cost: r.concreto.cBrita || 0 },
-                ], r.concreto.total);
+                ];
+                if (r.concreto.profQty > 0 && r.concreto.profVal > 0) rows.push({ label: `👷 Pedreiro (${r.concreto.profQty}×R$${fmt(r.concreto.profVal, 2)}×${r.concreto.dias}d)`, val: cur(r.concreto.cProf) });
+                if (r.concreto.servQty > 0 && r.concreto.servVal > 0) rows.push({ label: `🧹 Servente (${r.concreto.servQty}×R$${fmt(r.concreto.servVal, 2)}×${r.concreto.dias}d)`, val: cur(r.concreto.cServ) });
+                html += secao(`🏗️ Concreto ${r.concreto.fck}`, rows, r.concreto.total);
             }
             if (r.piso) {
-                html += secao('🔲 Piso/Revestimento', [
+                const rows = [
                     { label: 'Peças', val: `${r.piso.pecas.toLocaleString('pt-BR')} unid.` },
                     { label: 'Caixas', val: `${r.piso.caixas} caixas`, cost: r.piso.cCaixa || 0 },
                     { label: 'Argamassa', val: `${r.piso.argKg} kg`, cost: r.piso.cArg || 0 },
                     { label: 'Rejunte', val: `${r.piso.rejKg} kg`, cost: r.piso.cRej || 0 },
-                ], r.piso.total);
+                ];
+                if (r.piso.profQty > 0 && r.piso.profVal > 0) rows.push({ label: `👷 Ladrilheiro (${r.piso.profQty}×R$${fmt(r.piso.profVal, 2)}×${r.piso.dias}d)`, val: cur(r.piso.cProf) });
+                if (r.piso.servQty > 0 && r.piso.servVal > 0) rows.push({ label: `🧹 Servente (${r.piso.servQty}×R$${fmt(r.piso.servVal, 2)}×${r.piso.dias}d)`, val: cur(r.piso.cServ) });
+                html += secao('🔲 Piso/Revestimento', rows, r.piso.total);
             }
             if (r.pintura) {
                 const prows = [
@@ -834,6 +952,8 @@
                     { label: `Tinta ${r.pintura.tipo}`, val: `${r.pintura.latasTinta} latas (18L)`, cost: r.pintura.cTinta || 0 },
                 ];
                 if (r.pintura.latasSelador > 0) prows.push({ label: 'Selador/Massa', val: `${r.pintura.latasSelador} latas (18L)`, cost: r.pintura.cSel || 0 });
+                if (r.pintura.profQty > 0 && r.pintura.profVal > 0) prows.push({ label: `👷 Pintor (${r.pintura.profQty}×R$${fmt(r.pintura.profVal, 2)}×${r.pintura.dias}d)`, val: cur(r.pintura.cProf) });
+                if (r.pintura.servQty > 0 && r.pintura.servVal > 0) prows.push({ label: `🧹 Servente (${r.pintura.servQty}×R$${fmt(r.pintura.servVal, 2)}×${r.pintura.dias}d)`, val: cur(r.pintura.cServ) });
                 html += secao('🎨 Pintura', prows, r.pintura.total);
             }
 
