@@ -206,21 +206,17 @@
                                 <input type="number" id="alv-mo-prof-val" min="0" step="0.01" placeholder="Ex: 250,00"
                                     oninput="calcAlvenaria()" class="inp" />
                             </div>
-                            <div>
-                                <label class="lbl">Nº de Serventes</label>
-                                <input type="number" id="alv-mo-serv-qty" min="0" step="1" value="1"
-                                    oninput="calcAlvenaria()" class="inp" />
-                            </div>
-                            <div>
-                                <label class="lbl">Diária Servente (R$)</label>
-                                <input type="number" id="alv-mo-serv-val" min="0" step="0.01" placeholder="Ex: 150,00"
-                                    oninput="calcAlvenaria()" class="inp" />
-                            </div>
-                            <div class="col-span-2">
-                                <label class="lbl">Nº de Dias de Serviço</label>
-                                <input type="number" id="alv-mo-dias" min="1" step="1" value="1"
-                                    oninput="calcAlvenaria()" class="inp" />
-                            </div>
+                            <div><label class="lbl">Nº de Serventes</label><input type="number" id="alv-mo-serv-qty"
+                                    min="0" step="1" value="1" oninput="calcAlvenaria()" class="inp" /></div>
+                            <div><label class="lbl">Diária Servente (R$)</label><input type="number"
+                                    id="alv-mo-serv-val" min="0" step="0.01" placeholder="Ex: 150,00"
+                                    oninput="calcAlvenaria()" class="inp" /></div>
+                            <div><label class="lbl">Rendimento (m²/dia)</label><input type="number" id="alv-mo-rend"
+                                    min="0.1" step="0.5" value="12" oninput="calcAlvenaria()"
+                                    class="inp bg-blue-50/50" /></div>
+                            <div><label class="lbl">Nº de Dias (Estimados)</label><input type="number" id="alv-mo-dias"
+                                    min="1" step="0.5" value="1" oninput="calcAlvenaria()"
+                                    class="inp font-bold text-blue-800" readonly /></div>
                         </div>
                     </div>
 
@@ -304,9 +300,12 @@
                             <div><label class="lbl">Diária Servente (R$)</label><input type="number"
                                     id="reb-mo-serv-val" min="0" step="0.01" placeholder="Ex: 150,00"
                                     oninput="calcReboco()" class="inp" /></div>
-                            <div class="col-span-2"><label class="lbl">Nº de Dias de Serviço</label><input type="number"
-                                    id="reb-mo-dias" min="1" step="1" value="1" oninput="calcReboco()" class="inp" />
+                            <div><label class="lbl">Rendimento (m²/dia)</label><input type="number" id="reb-mo-rend"
+                                    min="0.1" step="0.5" value="15" oninput="calcReboco()" class="inp bg-blue-50/50" />
                             </div>
+                            <div><label class="lbl">Nº de Dias (Estimados)</label><input type="number" id="reb-mo-dias"
+                                    min="1" step="0.5" value="1" oninput="calcReboco()"
+                                    class="inp font-bold text-blue-800" readonly /></div>
                         </div>
                     </div>
                     <div class="bg-amber-50 border border-amber-200 rounded-xl p-3">
@@ -387,9 +386,12 @@
                             <div><label class="lbl">Diária Servente (R$)</label><input type="number"
                                     id="con-mo-serv-val" min="0" step="0.01" placeholder="Ex: 150,00"
                                     oninput="calcConcreto()" class="inp" /></div>
-                            <div class="col-span-2"><label class="lbl">Nº de Dias de Serviço</label><input type="number"
-                                    id="con-mo-dias" min="1" step="1" value="1" oninput="calcConcreto()" class="inp" />
-                            </div>
+                            <div><label class="lbl">Rendimento (m³/dia)</label><input type="number" id="con-mo-rend"
+                                    min="0.1" step="0.1" value="0.5" oninput="calcConcreto()"
+                                    class="inp bg-blue-50/50" /></div>
+                            <div><label class="lbl">Nº de Dias (Estimados)</label><input type="number" id="con-mo-dias"
+                                    min="1" step="0.5" value="1" oninput="calcConcreto()"
+                                    class="inp font-bold text-blue-800" readonly /></div>
                         </div>
                     </div>
                     <div class="bg-amber-50 border border-amber-200 rounded-xl p-3">
@@ -477,9 +479,12 @@
                             <div><label class="lbl">Diária Servente (R$)</label><input type="number"
                                     id="piso-mo-serv-val" min="0" step="0.01" placeholder="Ex: 150,00"
                                     oninput="calcPiso()" class="inp" /></div>
-                            <div class="col-span-2"><label class="lbl">Nº de Dias de Serviço</label><input type="number"
-                                    id="piso-mo-dias" min="1" step="1" value="1" oninput="calcPiso()" class="inp" />
+                            <div><label class="lbl">Rendimento (m²/dia)</label><input type="number" id="piso-mo-rend"
+                                    min="0.1" step="0.5" value="15" oninput="calcPiso()" class="inp bg-blue-50/50" />
                             </div>
+                            <div><label class="lbl">Nº de Dias (Estimados)</label><input type="number" id="piso-mo-dias"
+                                    min="1" step="0.5" value="1" oninput="calcPiso()"
+                                    class="inp font-bold text-blue-800" readonly /></div>
                         </div>
                     </div>
                     <div class="bg-amber-50 border border-amber-200 rounded-xl p-3">
@@ -540,9 +545,12 @@
                             <div><label class="lbl">Diária Ajudante (R$)</label><input type="number"
                                     id="ele-mo-serv-val" min="0" step="0.01" placeholder="Ex: 150,00"
                                     oninput="calcEletrica()" class="inp" /></div>
-                            <div class="col-span-2"><label class="lbl">Nº de Dias de Serviço</label><input type="number"
-                                    id="ele-mo-dias" min="1" step="1" value="1" oninput="calcEletrica()" class="inp" />
-                            </div>
+                            <div><label class="lbl">Rendimento (pts/dia)</label><input type="number" id="ele-mo-rend"
+                                    min="0.1" step="0.5" value="10" oninput="calcEletrica()"
+                                    class="inp bg-blue-50/50" /></div>
+                            <div><label class="lbl">Nº de Dias (Estimados)</label><input type="number" id="ele-mo-dias"
+                                    min="1" step="0.5" value="1" oninput="calcEletrica()"
+                                    class="inp font-bold text-blue-800" readonly /></div>
                         </div>
                     </div>
                     <div class="bg-amber-50 border border-amber-200 rounded-xl p-3">
@@ -686,9 +694,12 @@
                             <div><label class="lbl">Diária Servente (R$)</label><input type="number"
                                     id="pin-mo-serv-val" min="0" step="0.01" placeholder="Ex: 150,00"
                                     oninput="calcPintura()" class="inp" /></div>
-                            <div class="col-span-2"><label class="lbl">Nº de Dias de Serviço</label><input type="number"
-                                    id="pin-mo-dias" min="1" step="1" value="1" oninput="calcPintura()" class="inp" />
+                            <div><label class="lbl">Rendimento (m²/dia)</label><input type="number" id="pin-mo-rend"
+                                    min="0.1" step="0.5" value="40" oninput="calcPintura()" class="inp bg-blue-50/50" />
                             </div>
+                            <div><label class="lbl">Nº de Dias (Estimados)</label><input type="number" id="pin-mo-dias"
+                                    min="1" step="0.5" value="1" oninput="calcPintura()"
+                                    class="inp font-bold text-blue-800" readonly /></div>
                         </div>
                     </div>
                     <div class="bg-amber-50 border border-amber-200 rounded-xl p-3">
@@ -896,32 +907,30 @@
                 [partC, partA] = tracoVal.split(':').map(Number);
             }
             const soma = partC + partA;
-            // vol argamassa: ~0.012 m³/m² por cm de espessura (junta ~1cm)
             const vol_arg = area * 0.012 * LOSS;
             const sacosCim = Math.ceil(vol_arg * (partC / soma) / 0.033);
             const areia = parseFloat((vol_arg * (partA / soma)).toFixed(3));
             const tracoLabel = tracoVal === 'custom' ? `${partC}:${partA} (personalizado)` : tracoVal;
 
-            // Custos de material
             const ptj = v('alv-p-tj'), pcim = v('alv-p-cim'), pareia = v('alv-p-areia');
-            const cTj = ptj ? qtdTij * ptj : 0;
-            const cCim = pcim ? sacosCim * pcim : 0;
-            const cAreia = pareia ? areia * pareia : 0;
+            const cTj = ptj ? qtdTij * ptj : 0, cCim = pcim ? sacosCim * pcim : 0, cAreia = pareia ? areia * pareia : 0;
             const totalMat = cTj + cCim + cAreia;
 
             // Mão de obra
             const profQty = v('alv-mo-prof-qty'), profVal = v('alv-mo-prof-val');
             const servQty = v('alv-mo-serv-qty'), servVal = v('alv-mo-serv-val');
-            const dias = v('alv-mo-dias') || 1;
-            const cProf = profQty * profVal * dias;
-            const cServ = servQty * servVal * dias;
-            const totalMO = cProf + cServ;
-            const total = totalMat + totalMO;
+            const rendMO = v('alv-mo-rend') || 12;
+            const diasCalc = profQty > 0 ? Math.ceil((area / (profQty * rendMO)) * 2) / 2 : 1;
+            const dias = Math.max(1, diasCalc);
+            document.getElementById('alv-mo-dias').value = dias;
+
+            const cProf = profQty * profVal * dias, cServ = servQty * servVal * dias;
+            const totalMO = cProf + cServ, total = totalMat + totalMO;
 
             R.alvenaria = {
                 area, qtdTij, tijoloNome, tracoLabel, sacosCim, areia,
                 ptj, pcim, pareia, cTj, cCim, cAreia, totalMat,
-                profQty, profVal, servQty, servVal, dias, cProf, cServ, totalMO, total
+                profQty, profVal, servQty, servVal, rendMO, dias, cProf, cServ, totalMO, total
             };
 
             const items = [
@@ -930,11 +939,8 @@
                 { label: 'Sacos de Cimento 50kg', value: sacosCim, unit: 'sacos', cost: cCim || 0 },
                 { label: 'Areia', value: fmt(areia, 3), unit: 'm³', cost: cAreia || 0 },
             ];
-            // Mão de obra rows
-            if (profQty > 0 && profVal > 0)
-                items.push({ label: `👷 Pedreiro (${profQty} × R$${fmt(profVal, 2)} × ${dias}d)`, value: fmt(cProf, 2), unit: 'R$' });
-            if (servQty > 0 && servVal > 0)
-                items.push({ label: `🧹 Servente (${servQty} × R$${fmt(servVal, 2)} × ${dias}d)`, value: fmt(cServ, 2), unit: 'R$' });
+            if (profQty > 0 && profVal > 0) items.push({ label: `👷 Pedreiro (${profQty}×R$${fmt(profVal, 2)}×${dias}d)`, value: fmt(cProf, 2), unit: 'R$' });
+            if (servQty > 0 && servVal > 0) items.push({ label: `🧹 Servente (${servQty}×R$${fmt(servVal, 2)}×${dias}d)`, value: fmt(cServ, 2), unit: 'R$' });
 
             el.innerHTML = resultHTML('Resultado — Alvenaria', '🧱', items, total > 0 ? total : 0);
         }
@@ -979,13 +985,17 @@
 
             const profQty = v('reb-mo-prof-qty'), profVal = v('reb-mo-prof-val');
             const servQty = v('reb-mo-serv-qty'), servVal = v('reb-mo-serv-val');
-            const dias = v('reb-mo-dias') || 1;
+            const rendMO = v('reb-mo-rend') || 15;
+            const diasCalc = profQty > 0 ? Math.ceil((area / (profQty * rendMO)) * 2) / 2 : 1;
+            const dias = Math.max(1, diasCalc);
+            document.getElementById('reb-mo-dias').value = dias;
+
             const cProf = profQty * profVal * dias, cServ = servQty * servVal * dias;
             const total = totalMat + cProf + cServ;
 
             R.reboco = {
                 area, tipo: tr.nome, sacosCim, calSc, areia: areiaM3 + areiaFinaM3, areiaFina: areiaFinaM3, aditivo,
-                cCim, cCal, cAreia, totalMat, profQty, profVal, servQty, servVal, dias, cProf, cServ, total
+                cCim, cCal, cAreia, totalMat, profQty, profVal, servQty, servVal, rendMO, dias, cProf, cServ, total
             };
             const items = [
                 { label: 'Área total', value: fmt(area), unit: 'm²' },
@@ -1035,13 +1045,17 @@
 
             const profQty = v('con-mo-prof-qty'), profVal = v('con-mo-prof-val');
             const servQty = v('con-mo-serv-qty'), servVal = v('con-mo-serv-val');
-            const dias = v('con-mo-dias') || 1;
+            const rendMO = v('con-mo-rend') || 0.5;
+            const diasCalc = profQty > 0 ? Math.ceil((vol / (profQty * rendMO)) * 2) / 2 : 1;
+            const dias = Math.max(1, diasCalc);
+            document.getElementById('con-mo-dias').value = dias;
+
             const cProf = profQty * profVal * dias, cServ = servQty * servVal * dias;
             const total = totalMat + cProf + cServ;
 
             R.concreto = {
                 fck: c.nome, vol, sacosCim, areia, brita, cCim, cAreia, cBrita, totalMat,
-                profQty, profVal, servQty, servVal, dias, cProf, cServ, total
+                profQty, profVal, servQty, servVal, rendMO, dias, cProf, cServ, total
             };
             const items = [
                 { label: 'Volume de concreto', value: fmt(vol, 3), unit: 'm³' },
@@ -1088,13 +1102,17 @@
 
             const profQty = v('piso-mo-prof-qty'), profVal = v('piso-mo-prof-val');
             const servQty = v('piso-mo-serv-qty'), servVal = v('piso-mo-serv-val');
-            const dias = v('piso-mo-dias') || 1;
+            const rendMO = v('piso-mo-rend') || 15;
+            const diasCalc = profQty > 0 ? Math.ceil((areaC / (profQty * rendMO)) * 2) / 2 : 1;
+            const dias = Math.max(1, diasCalc);
+            document.getElementById('piso-mo-dias').value = dias;
+
             const cProf = profQty * profVal * dias, cServ = servQty * servVal * dias;
             const total = totalMat + cProf + cServ;
 
             R.piso = {
                 area, pecas, caixas, argKg, rejKg, cCaixa, cArg, cRej, sacosCim, areia: areiaM3, totalMat,
-                profQty, profVal, servQty, servVal, dias, cProf, cServ, total
+                profQty, profVal, servQty, servVal, rendMO, dias, cProf, cServ, total
             };
             const items = [
                 { label: 'Área com margem', value: fmt(areaC), unit: 'm²' },
@@ -1137,13 +1155,18 @@
 
             const profQty = v('ele-mo-prof-qty'), profVal = v('ele-mo-prof-val');
             const servQty = v('ele-mo-serv-qty'), servVal = v('ele-mo-serv-val');
-            const dias = v('ele-mo-dias') || 1;
+            const rendMO = v('ele-mo-rend') || 10;
+            const baseCalc = pontos > 0 ? pontos : (area / 2.5); // Fallback: 1 ponto a cada 2.5m2
+            const diasCalc = profQty > 0 ? Math.ceil((baseCalc / (profQty * rendMO)) * 2) / 2 : 1;
+            const dias = Math.max(1, diasCalc);
+            document.getElementById('ele-mo-dias').value = dias;
+
             const cProf = profQty * profVal * dias, cServ = servQty * servVal * dias;
             const total = totalMat + cProf + cServ;
 
             R.eletrica = {
                 area, pontos, rolosFio, rolosCon, caixas, cFio, cCon, cCaixa, totalMat,
-                profQty, profVal, servQty, servVal, dias, cProf, cServ, total
+                profQty, profVal, servQty, servVal, rendMO, dias, cProf, cServ, total
             };
             const items = [
                 { label: 'Rolos de Fio (100m)', value: rolosFio, unit: 'rolos', cost: cFio || 0 },
@@ -1172,13 +1195,17 @@
 
             const profQty = v('pin-mo-prof-qty'), profVal = v('pin-mo-prof-val');
             const servQty = v('pin-mo-serv-qty'), servVal = v('pin-mo-serv-val');
-            const dias = v('pin-mo-dias') || 1;
+            const rendMO = v('pin-mo-rend') || 40;
+            const diasCalc = profQty > 0 ? Math.ceil((area / (profQty * rendMO)) * 2) / 2 : 1;
+            const dias = Math.max(1, diasCalc);
+            document.getElementById('pin-mo-dias').value = dias;
+
             const cProf = profQty * profVal * dias, cServ = servQty * servVal * dias;
             const total = totalMat + cProf + cServ;
 
             R.pintura = {
                 area, demaos, tipo: nomes[tipoSel], litrosTinta, latasTinta, latasSelador,
-                cTinta, cSel, totalMat, profQty, profVal, servQty, servVal, dias, cProf, cServ, total
+                cTinta, cSel, totalMat, profQty, profVal, servQty, servVal, rendMO, dias, cProf, cServ, total
             };
             const items = [
                 { label: 'Área a pintar', value: fmt(area), unit: 'm²' },
@@ -1197,7 +1224,7 @@
             const now = new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' });
             document.getElementById('rel-data').textContent = 'Gerado em ' + now;
 
-            function secao(title, rows, total) {
+            function secao(title, rows, total, yieldVal) {
                 const trs = rows.map(r => `
       <tr><td class="py-2 px-3 border-b border-slate-100 text-sm">${r.label}</td>
           <td class="py-2 px-3 border-b border-slate-100 text-right font-semibold text-sm">${r.val}</td></tr>
@@ -1205,9 +1232,12 @@
     `).join('');
                 const totalRow = total ? `<tr class="cost-badge text-white"><td class="py-3 px-3 font-bold text-sm">💰 Custo Total</td><td class="py-3 px-3 text-right font-extrabold">${cur(total)}</td></tr>` : '';
                 return `<div class="mb-6">
-      <h3 class="font-bold text-slate-800 mb-3 pb-2 border-b-2 border-blue-800">${title}</h3>
+      <div class="flex justify-between items-end mb-3 pb-2 border-b-2 border-blue-800">
+        <h3 class="font-bold text-slate-800">${title}</h3>
+        ${yieldVal ? `<span class="text-[10px] text-slate-400 italic mb-1">Produtividade: ${yieldVal} unid/dia</span>` : ''}
+      </div>
       <table class="w-full">
-        <tr class="bg-slate-50"><th class="text-left py-2 px-3 text-slate-500 text-xs">Material</th><th class="text-right py-2 px-3 text-slate-500 text-xs">Quantidade / Custo</th></tr>
+        <tr class="bg-slate-50"><th class="text-left py-2 px-3 text-slate-500 text-xs">Material / Serviço</th><th class="text-right py-2 px-3 text-slate-500 text-xs">Quantidade / Custo</th></tr>
         ${trs}${totalRow}
       </table></div>`;
             }
@@ -1227,7 +1257,7 @@
                     { label: 'Cimento (50kg)', val: `${r.alvenaria.sacosCim} sacos`, cost: r.alvenaria.cCim || 0 },
                     { label: 'Areia', val: `${fmt(r.alvenaria.areia, 3)} m³`, cost: r.alvenaria.cAreia || 0 },
                     ...aMoRows,
-                ], r.alvenaria.total);
+                ], r.alvenaria.total, r.alvenaria.rendMO);
             }
             if (r.reboco) {
                 const rows = [
@@ -1240,9 +1270,8 @@
                     rows.push({ label: 'Areia Fina (extra)', val: `${fmt(r.reboco.areiaFina, 3)} m³`, cost: r.reboco.cAreia || 0 });
                 }
                 rows.push({ label: 'Areia Média', val: `${fmt(r.reboco.areia - (r.reboco.areiaFina || 0), 3)} m³`, cost: r.reboco.cAreia || 0 });
-                if (r.reboco.profQty > 0 && r.reboco.profVal > 0) rows.push({ label: `👷 Pedreiro (${r.reboco.profQty}×R$${fmt(r.reboco.profVal, 2)}×${r.reboco.dias}d)`, val: cur(r.reboco.cProf) });
                 if (r.reboco.servQty > 0 && r.reboco.servVal > 0) rows.push({ label: `🧹 Servente (${r.reboco.servQty}×R$${fmt(r.reboco.servVal, 2)}×${r.reboco.dias}d)`, val: cur(r.reboco.cServ) });
-                html += secao(`🪣 ${r.reboco.tipo}`, rows, r.reboco.total);
+                html += secao(`🪣 ${r.reboco.tipo}`, rows, r.reboco.total, r.reboco.rendMO);
             }
             if (r.concreto) {
                 const rows = [
@@ -1251,9 +1280,8 @@
                     { label: 'Areia', val: `${fmt(r.concreto.areia, 3)} m³`, cost: r.concreto.cAreia || 0 },
                     { label: 'Brita', val: `${fmt(r.concreto.brita, 3)} m³`, cost: r.concreto.cBrita || 0 },
                 ];
-                if (r.concreto.profQty > 0 && r.concreto.profVal > 0) rows.push({ label: `👷 Pedreiro (${r.concreto.profQty}×R$${fmt(r.concreto.profVal, 2)}×${r.concreto.dias}d)`, val: cur(r.concreto.cProf) });
                 if (r.concreto.servQty > 0 && r.concreto.servVal > 0) rows.push({ label: `🧹 Servente (${r.concreto.servQty}×R$${fmt(r.concreto.servVal, 2)}×${r.concreto.dias}d)`, val: cur(r.concreto.cServ) });
-                html += secao(`🏗️ Concreto ${r.concreto.fck}`, rows, r.concreto.total);
+                html += secao(`🏗️ Concreto ${r.concreto.fck}`, rows, r.concreto.total, r.concreto.rendMO);
             }
             if (r.piso) {
                 const rows = [
@@ -1267,9 +1295,8 @@
                     rows.push({ label: 'Areia Média', val: `${fmt(r.piso.areia, 3)} m³` });
                 }
                 rows.push({ label: 'Rejunte', val: `${r.piso.rejKg} kg`, cost: r.piso.cRej || 0 });
-                if (r.piso.profQty > 0 && r.piso.profVal > 0) rows.push({ label: `👷 Pedreiro (${r.piso.profQty}×R$${fmt(r.piso.profVal, 2)}×${r.piso.dias}d)`, val: cur(r.piso.cProf) });
                 if (r.piso.servQty > 0 && r.piso.servVal > 0) rows.push({ label: `🧹 Servente (${r.piso.servQty}×R$${fmt(r.piso.servVal, 2)}×${r.piso.dias}d)`, val: cur(r.piso.cServ) });
-                html += secao('🔲 Piso/Revestimento', rows, r.piso.total);
+                html += secao('🔲 Piso/Revestimento', rows, r.piso.total, r.piso.rendMO);
             }
             if (r.eletrica) {
                 const rows = [
@@ -1277,9 +1304,8 @@
                     { label: 'Conduite', val: `${r.eletrica.rolosCon} rolos (50m)`, cost: r.eletrica.cCon || 0 },
                     { label: 'Caixas 4x2', val: `${r.eletrica.caixas} unid.`, cost: r.eletrica.cCaixa || 0 },
                 ];
-                if (r.eletrica.profQty > 0 && r.eletrica.profVal > 0) rows.push({ label: `👷 Eletricista (${r.eletrica.profQty}×R$${fmt(r.eletrica.profVal, 2)}×${r.eletrica.dias}d)`, val: cur(r.eletrica.cProf) });
                 if (r.eletrica.servQty > 0 && r.eletrica.servVal > 0) rows.push({ label: `🧹 Ajudante (${r.eletrica.servQty}×R$${fmt(r.eletrica.servVal, 2)}×${r.eletrica.dias}d)`, val: cur(r.eletrica.cServ) });
-                html += secao('⚡ Elétrica', rows, r.eletrica.total);
+                html += secao('⚡ Elétrica', rows, r.eletrica.total, r.eletrica.rendMO);
             }
             if (r.pintura) {
                 const prows = [
@@ -1288,9 +1314,8 @@
                     { label: `Tinta ${r.pintura.tipo}`, val: `${r.pintura.latasTinta} latas (18L)`, cost: r.pintura.cTinta || 0 },
                 ];
                 if (r.pintura.latasSelador > 0) prows.push({ label: 'Selador/Massa', val: `${r.pintura.latasSelador} latas (18L)`, cost: r.pintura.cSel || 0 });
-                if (r.pintura.profQty > 0 && r.pintura.profVal > 0) prows.push({ label: `👷 Pintor (${r.pintura.profQty}×R$${fmt(r.pintura.profVal, 2)}×${r.pintura.dias}d)`, val: cur(r.pintura.cProf) });
                 if (r.pintura.servQty > 0 && r.pintura.servVal > 0) prows.push({ label: `🧹 Servente (${r.pintura.servQty}×R$${fmt(r.pintura.servVal, 2)}×${r.pintura.dias}d)`, val: cur(r.pintura.cServ) });
-                html += secao('🎨 Pintura', prows, r.pintura.total);
+                html += secao('🎨 Pintura', prows, r.pintura.total, r.pintura.rendMO);
             }
 
             // Grand total
