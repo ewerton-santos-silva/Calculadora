@@ -1,0 +1,17 @@
+{
+  "name": "Calculadora de Obras Ágil",
+  "short_name": "CalcObras",
+  "description": "Calculadora profissional para materiais e custos de obra.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0f2744",
+  "theme_color": "#0f2744",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/3022/3022230.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

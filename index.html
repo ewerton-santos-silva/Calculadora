@@ -4,6 +4,8 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="manifest" href="manifest.json" />
+    <meta name="theme-color" content="#0f2744" />
     <title>Calculadora de Obras Ágil</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
@@ -98,6 +100,9 @@
             <button onclick="showTab('piso')" id="tab-piso"
                 class="tab-inactive flex-1 min-w-[100px] py-3 px-1 rounded-xl text-xs font-semibold transition-all">🔲
                 Piso</button>
+            <button onclick="showTab('eletrica')" id="tab-eletrica"
+                class="tab-inactive flex-1 min-w-[100px] py-3 px-1 rounded-xl text-xs font-semibold transition-all">⚡
+                Elétrica</button>
             <button onclick="showTab('pintura')" id="tab-pintura"
                 class="tab-inactive flex-1 min-w-[100px] py-3 px-1 rounded-xl text-xs font-semibold transition-all">🎨
                 Pintura</button>
@@ -410,9 +415,9 @@
                     <div class="border-t border-slate-100 pt-4">
                         <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">👷 Mão de Obra</p>
                         <div class="grid grid-cols-2 gap-3">
-                            <div><label class="lbl">Nº de Ladrilheiros</label><input type="number" id="piso-mo-prof-qty"
+                            <div><label class="lbl">Nº de Pedreiros</label><input type="number" id="piso-mo-prof-qty"
                                     min="0" step="1" value="1" oninput="calcPiso()" class="inp" /></div>
-                            <div><label class="lbl">Diária Ladrilheiro (R$)</label><input type="number"
+                            <div><label class="lbl">Diária Pedreiro (R$)</label><input type="number"
                                     id="piso-mo-prof-val" min="0" step="0.01" placeholder="Ex: 280,00"
                                     oninput="calcPiso()" class="inp" /></div>
                             <div><label class="lbl">Nº de Serventes</label><input type="number" id="piso-mo-serv-qty"
@@ -431,6 +436,70 @@
                     </div>
                 </div>
                 <div id="res-piso" class="bg-white rounded-2xl shadow-md p-6 flex items-center justify-center">
+                    <p class="text-slate-400 text-center text-sm">Preencha os dados ao lado para ver os resultados.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- =================== ELÉTRICA =================== -->
+        <section id="sec-eletrica" class="section-panel hidden">
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-white rounded-2xl shadow-md p-6 space-y-4 overflow-y-auto max-h-[82vh]">
+                    <h2 class="text-lg font-bold text-slate-800">⚡ Instalação Elétrica</h2>
+                    <div>
+                        <label class="lbl">Área da instalação (m²)</label>
+                        <input type="number" id="ele-area" min="0" step="0.01" placeholder="Ex: 50"
+                            oninput="calcEletrica()" class="inp" />
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="lbl">Nº de Pontos (Tomadas/Int.)</label>
+                            <input type="number" id="ele-pontos" min="0" step="1" placeholder="Ex: 20"
+                                oninput="calcEletrica()" class="inp" />
+                        </div>
+                        <div>
+                            <label class="lbl">Estimativa de Fios (m/m²)</label>
+                            <input type="number" id="ele-fio-m" min="1" step="0.5" value="6" oninput="calcEletrica()"
+                                class="inp" />
+                        </div>
+                    </div>
+                    <div class="border-t border-slate-100 pt-4">
+                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">💰 Preços de
+                            Materiais (R$)</p>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div><label class="lbl">Fio 2.5mm (rolo 100m)</label><input type="number" id="ele-p-fio"
+                                    min="0" step="0.01" placeholder="0,00" oninput="calcEletrica()" class="inp" /></div>
+                            <div><label class="lbl">Conduite 3/4" (rolo 50m)</label><input type="number" id="ele-p-con"
+                                    min="0" step="0.01" placeholder="0,00" oninput="calcEletrica()" class="inp" /></div>
+                            <div><label class="lbl">Caixa 4x2 (unid.)</label><input type="number" id="ele-p-caixa"
+                                    min="0" step="0.01" placeholder="0,00" oninput="calcEletrica()" class="inp" /></div>
+                        </div>
+                    </div>
+                    <div class="border-t border-slate-100 pt-4">
+                        <p class="text-xs font-semibold text-slate-500 uppercase tracking-wide mb-3">👷 Mão de Obra</p>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div><label class="lbl">Nº de Eletricistas</label><input type="number" id="ele-mo-prof-qty"
+                                    min="0" step="1" value="1" oninput="calcEletrica()" class="inp" /></div>
+                            <div><label class="lbl">Diária Eletricista (R$)</label><input type="number"
+                                    id="ele-mo-prof-val" min="0" step="0.01" placeholder="Ex: 300,00"
+                                    oninput="calcEletrica()" class="inp" /></div>
+                            <div><label class="lbl">Nº de Ajudantes</label><input type="number" id="ele-mo-serv-qty"
+                                    min="0" step="1" value="1" oninput="calcEletrica()" class="inp" /></div>
+                            <div><label class="lbl">Diária Ajudante (R$)</label><input type="number"
+                                    id="ele-mo-serv-val" min="0" step="0.01" placeholder="Ex: 150,00"
+                                    oninput="calcEletrica()" class="inp" /></div>
+                            <div class="col-span-2"><label class="lbl">Nº de Dias de Serviço</label><input type="number"
+                                    id="ele-mo-dias" min="1" step="1" value="1" oninput="calcEletrica()" class="inp" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-amber-50 border border-amber-200 rounded-xl p-3">
+                        <p class="text-xs text-amber-700 font-medium">ℹ️ Estimativa baseada em área e pontos. Considere
+                            projeto específico.
+                        </p>
+                    </div>
+                </div>
+                <div id="res-eletrica" class="bg-white rounded-2xl shadow-md p-6 flex items-center justify-center">
                     <p class="text-slate-400 text-center text-sm">Preencha os dados ao lado para ver os resultados.</p>
                 </div>
             </div>
@@ -580,7 +649,7 @@
     <script>
         // ===== TABS =====
         function showTab(name) {
-            ['alvenaria', 'reboco', 'concreto', 'piso', 'pintura'].forEach(t => {
+            ['alvenaria', 'reboco', 'concreto', 'piso', 'eletrica', 'pintura'].forEach(t => {
                 document.getElementById('sec-' + t).classList.add('hidden');
                 const tab = document.getElementById('tab-' + t);
                 tab.className = tab.className.replace('tab-active', 'tab-inactive');
@@ -833,9 +902,50 @@
                 { label: 'Argamassa', value: argKg, unit: 'kg', cost: cArg || 0 },
                 { label: 'Rejunte', value: rejKg, unit: 'kg', cost: cRej || 0 },
             ];
-            if (profQty > 0 && profVal > 0) items.push({ label: `👷 Ladrilheiro (${profQty}×R$${fmt(profVal, 2)}×${dias}d)`, value: fmt(cProf, 2), unit: 'R$' });
+            if (profQty > 0 && profVal > 0) items.push({ label: `👷 Pedreiro (${profQty}×R$${fmt(profVal, 2)}×${dias}d)`, value: fmt(cProf, 2), unit: 'R$' });
             if (servQty > 0 && servVal > 0) items.push({ label: `🧹 Servente (${servQty}×R$${fmt(servVal, 2)}×${dias}d)`, value: fmt(cServ, 2), unit: 'R$' });
             el.innerHTML = resultHTML('Resultado — Piso/Revestimento', '🔲', items, total > 0 ? total : 0);
+        }
+
+        // ===== ELÉTRICA =====
+        function calcEletrica() {
+            const area = v('ele-area'), pontos = v('ele-pontos'), fioM2 = v('ele-fio-m') || 6;
+            const el = document.getElementById('res-eletrica');
+            if (!area && !pontos) { el.innerHTML = '<p class="text-slate-400 text-center text-sm">Preencha a área ou nº de pontos.</p>'; return; }
+
+            // Fios (estimativa: area * fioM2) + 10%
+            const metrosFio = (area * fioM2) * LOSS;
+            const rolosFio = Math.ceil(metrosFio / 100);
+
+            // Conduite (estimativa: area * 1.5) + 10%
+            const metrosCon = (area * 1.5) * LOSS;
+            const rolosCon = Math.ceil(metrosCon / 50);
+
+            // Caixas (nº de pontos + 10%)
+            const caixas = Math.ceil(pontos * LOSS);
+
+            const pfio = v('ele-p-fio'), pcon = v('ele-p-con'), pcaixa = v('ele-p-caixa');
+            const cFio = pfio ? rolosFio * pfio : 0, cCon = pcon ? rolosCon * pcon : 0, cCaixa = pcaixa ? caixas * pcaixa : 0;
+            const totalMat = cFio + cCon + cCaixa;
+
+            const profQty = v('ele-mo-prof-qty'), profVal = v('ele-mo-prof-val');
+            const servQty = v('ele-mo-serv-qty'), servVal = v('ele-mo-serv-val');
+            const dias = v('ele-mo-dias') || 1;
+            const cProf = profQty * profVal * dias, cServ = servQty * servVal * dias;
+            const total = totalMat + cProf + cServ;
+
+            R.eletrica = {
+                area, pontos, rolosFio, rolosCon, caixas, cFio, cCon, cCaixa, totalMat,
+                profQty, profVal, servQty, servVal, dias, cProf, cServ, total
+            };
+            const items = [
+                { label: 'Rolos de Fio (100m)', value: rolosFio, unit: 'rolos', cost: cFio || 0 },
+                { label: 'Rolos de Conduite (50m)', value: rolosCon, unit: 'rolos', cost: cCon || 0 },
+                { label: 'Caixas 4x2', value: caixas, unit: 'unid.', cost: cCaixa || 0 },
+            ];
+            if (profQty > 0 && profVal > 0) items.push({ label: `👷 Eletricista (${profQty}×R$${fmt(profVal, 2)}×${dias}d)`, value: fmt(cProf, 2), unit: 'R$' });
+            if (servQty > 0 && servVal > 0) items.push({ label: `🧹 Ajudante (${servQty}×R$${fmt(servVal, 2)}×${dias}d)`, value: fmt(cServ, 2), unit: 'R$' });
+            el.innerHTML = resultHTML('Resultado — Elétrica', '⚡', items, total > 0 ? total : 0);
         }
 
         // ===== PINTURA =====
@@ -941,9 +1051,19 @@
                     { label: 'Argamassa', val: `${r.piso.argKg} kg`, cost: r.piso.cArg || 0 },
                     { label: 'Rejunte', val: `${r.piso.rejKg} kg`, cost: r.piso.cRej || 0 },
                 ];
-                if (r.piso.profQty > 0 && r.piso.profVal > 0) rows.push({ label: `👷 Ladrilheiro (${r.piso.profQty}×R$${fmt(r.piso.profVal, 2)}×${r.piso.dias}d)`, val: cur(r.piso.cProf) });
+                if (r.piso.profQty > 0 && r.piso.profVal > 0) rows.push({ label: `👷 Pedreiro (${r.piso.profQty}×R$${fmt(r.piso.profVal, 2)}×${r.piso.dias}d)`, val: cur(r.piso.cProf) });
                 if (r.piso.servQty > 0 && r.piso.servVal > 0) rows.push({ label: `🧹 Servente (${r.piso.servQty}×R$${fmt(r.piso.servVal, 2)}×${r.piso.dias}d)`, val: cur(r.piso.cServ) });
                 html += secao('🔲 Piso/Revestimento', rows, r.piso.total);
+            }
+            if (r.eletrica) {
+                const rows = [
+                    { label: 'Rolos de Fio', val: `${r.eletrica.rolosFio} rolos (100m)`, cost: r.eletrica.cFio || 0 },
+                    { label: 'Conduite', val: `${r.eletrica.rolosCon} rolos (50m)`, cost: r.eletrica.cCon || 0 },
+                    { label: 'Caixas 4x2', val: `${r.eletrica.caixas} unid.`, cost: r.eletrica.cCaixa || 0 },
+                ];
+                if (r.eletrica.profQty > 0 && r.eletrica.profVal > 0) rows.push({ label: `👷 Eletricista (${r.eletrica.profQty}×R$${fmt(r.eletrica.profVal, 2)}×${r.eletrica.dias}d)`, val: cur(r.eletrica.cProf) });
+                if (r.eletrica.servQty > 0 && r.eletrica.servVal > 0) rows.push({ label: `🧹 Ajudante (${r.eletrica.servQty}×R$${fmt(r.eletrica.servVal, 2)}×${r.eletrica.dias}d)`, val: cur(r.eletrica.cServ) });
+                html += secao('⚡ Elétrica', rows, r.eletrica.total);
             }
             if (r.pintura) {
                 const prows = [
@@ -958,7 +1078,7 @@
             }
 
             // Grand total
-            const grandTotal = [r.alvenaria, r.reboco, r.concreto, r.piso, r.pintura].reduce((s, x) => s + (x && x.total ? x.total : 0), 0);
+            const grandTotal = [r.alvenaria, r.reboco, r.concreto, r.piso, r.eletrica, r.pintura].reduce((s, x) => s + (x && x.total ? x.total : 0), 0);
             if (grandTotal > 0) {
                 html += `<div class="cost-badge text-white rounded-xl p-5 flex justify-between items-center mt-4">
       <span class="font-bold text-base">🏗️ CUSTO TOTAL GERAL</span>
@@ -975,6 +1095,13 @@
 
         function fecharModal() {
             document.getElementById('modal-relatorio').classList.add('hidden');
+        }
+
+        // PWA registration
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW error:', err));
+            });
         }
     </script>
 </body>
