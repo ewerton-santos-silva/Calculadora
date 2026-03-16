@@ -120,18 +120,30 @@
                 <div class="bg-white rounded-2xl shadow-md p-6 space-y-4 overflow-y-auto max-h-[82vh]">
                     <h2 class="text-lg font-bold text-slate-800">🧱 Dados da Alvenaria</h2>
 
-                    <!-- DIMENSÕES -->
-                    <div class="grid grid-cols-2 gap-3">
-                        <div>
-                            <label class="lbl">Comprimento (m)</label>
-                            <input type="number" id="alv-comp" min="0" step="0.01" placeholder="Ex: 10"
-                                oninput="calcAlvenaria()" class="inp" />
+                    <!-- DIMENSÕES DA ALVENARIA (MÚLTIPLAS PAREDES) -->
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center">
+                            <label class="lbl mb-0">Relação de Paredes</label>
+                            <span id="alv-total-area-badge" class="text-xs font-bold text-blue-700 bg-blue-100 px-2 py-1 rounded-md hidden">Total: 0.00 m²</span>
                         </div>
-                        <div>
-                            <label class="lbl">Altura (m)</label>
-                            <input type="number" id="alv-alt" min="0" step="0.01" placeholder="Ex: 2.8"
-                                oninput="calcAlvenaria()" class="inp" />
+                        <div id="alv-walls-container" class="space-y-2">
+                            <!-- JS will populate walls here -->
                         </div>
+                        <button onclick="addAlvenariaParede()" class="w-full border-2 border-dashed border-slate-300 text-slate-500 hover:text-blue-600 hover:border-blue-400 font-semibold py-2 rounded-xl transition-all text-sm flex items-center justify-center gap-2">
+                            <span>➕ Adicionar Parede</span>
+                        </button>
+                    </div>
+
+                    <!-- AUTO_INCLUSION OPTIONS -->
+                    <div class="bg-blue-50/50 border border-blue-100 rounded-xl p-3 space-y-2">
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="checkbox" id="alv-include-chapisco" class="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500" checked onchange="calcAlvenaria()">
+                            <span class="text-sm font-medium text-slate-700">Incluir Chapisco para esta área (usa os padrões da aba Chapisco)</span>
+                        </label>
+                        <label class="flex items-center gap-2 cursor-pointer">
+                            <input type="checkbox" id="alv-include-reboco" class="w-4 h-4 text-blue-600 rounded border-slate-300 focus:ring-blue-500" checked onchange="calcAlvenaria()">
+                            <span class="text-sm font-medium text-slate-700">Incluir Reboco para esta área (usa os padrões da aba Reboco)</span>
+                        </label>
                     </div>
 
                     <!-- TIPO DE TIJOLO -->
@@ -406,21 +418,18 @@
             <div class="grid md:grid-cols-2 gap-6">
                 <div class="bg-white rounded-2xl shadow-md p-6 space-y-4 overflow-y-auto max-h-[82vh]">
                     <h2 class="text-lg font-bold text-slate-800">🏗️ Concreto Estrutural</h2>
-                    <div>
-                        <label class="lbl">Tipo de elemento</label>
-                        <select id="con-tipo" onchange="calcConcreto()" class="inp bg-white">
-                            <option value="viga">Viga</option>
-                            <option value="pilar">Pilar</option>
-                            <option value="laje">Laje</option>
-                        </select>
-                    </div>
-                    <div class="grid grid-cols-3 gap-3">
-                        <div><label class="lbl" id="con-label1">Largura (m)</label><input type="number" id="con-d1"
-                                min="0" step="0.01" placeholder="0.00" oninput="calcConcreto()" class="inp" /></div>
-                        <div><label class="lbl" id="con-label2">Altura (m)</label><input type="number" id="con-d2"
-                                min="0" step="0.01" placeholder="0.00" oninput="calcConcreto()" class="inp" /></div>
-                        <div><label class="lbl" id="con-label3">Comprimento (m)</label><input type="number" id="con-d3"
-                                min="0" step="0.01" placeholder="0.00" oninput="calcConcreto()" class="inp" /></div>
+                    <!-- DIMENSÕES DO CONCRETO (MÚLTIPLAS PEÇAS) -->
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-center">
+                            <label class="lbl mb-0">Relação de Peças</label>
+                            <span id="con-total-vol-badge" class="text-xs font-bold text-blue-700 bg-blue-100 px-2 py-1 rounded-md hidden">Total: 0.00 m³</span>
+                        </div>
+                        <div id="con-pieces-container" class="space-y-2">
+                            <!-- JS will populate pieces here -->
+                        </div>
+                        <button onclick="addConcretoPeca()" class="w-full border-2 border-dashed border-slate-300 text-slate-500 hover:text-blue-600 hover:border-blue-400 font-semibold py-2 rounded-xl transition-all text-sm flex items-center justify-center gap-2">
+                            <span>➕ Adicionar Peça</span>
+                        </button>
                     </div>
                     <div>
                         <label class="lbl">Resistência (fck) / Traço (Cim:Areia:Brita)</label>
@@ -973,6 +982,8 @@
         const LOSS = 1.10;
         const R = window._lastResults = {};
         window.Orcamento = [];
+        window.AlvenariaParedes = [{ nome: 'Parede 1', comp: '', alt: '' }];
+        window.ConcretoPecas = [{ tipo: 'pilar', nome: 'Pilar 1', qty: 1, cDim1: '', cDim2: '', cDim3: '' }];
 
         function adicionarAoOrcamento(category) {
             if (!R[category]) return;
@@ -992,6 +1003,49 @@
             const count = window.Orcamento.filter(i => i._category === category).length + 1;
             item._displayName = `${item._title} ${count}`;
             window.Orcamento.push(item);
+
+            // Auto-include Chapisco & Reboco if coming from Alvenaria
+            if (category === 'alvenaria') {
+                if (item._includeChapisco) {
+                    // Force a recalculation of Chapisco with Alvenaria's area first
+                    const oldArea = document.getElementById('cha-area').value;
+                    document.getElementById('cha-area').value = item.area;
+                    calcChapisco();
+                    
+                    if (R.chapisco) {
+                        const chapItem = JSON.parse(JSON.stringify(R.chapisco));
+                        chapItem._category = 'chapisco';
+                        chapItem._title = titles.chapisco.title;
+                        chapItem._icon = titles.chapisco.icon;
+                        const chapCount = window.Orcamento.filter(i => i._category === 'chapisco').length + 1;
+                        chapItem._displayName = `${chapItem._title} ${chapCount} (Autogerado da ${item._displayName})`;
+                        window.Orcamento.push(chapItem);
+                    }
+                    // restore previous input
+                    document.getElementById('cha-area').value = oldArea;
+                    calcChapisco();
+                }
+                
+                if (item._includeReboco) {
+                    // Automate Reboco calculation (assuming 2 sides of the wall)
+                    const oldArea = document.getElementById('reb-area').value;
+                    document.getElementById('reb-area').value = item.area * 2;
+                    calcReboco();
+                    
+                    if (R.reboco) {
+                        const rebItem = JSON.parse(JSON.stringify(R.reboco));
+                        rebItem._category = 'reboco';
+                        rebItem._title = titles.reboco.title;
+                        rebItem._icon = titles.reboco.icon;
+                        const rebCount = window.Orcamento.filter(i => i._category === 'reboco').length + 1;
+                        rebItem._displayName = `${rebItem._title} ${rebCount} (Autogerado da ${item._displayName} - 2 faces)`;
+                        window.Orcamento.push(rebItem);
+                    }
+                    // restore previous input
+                    document.getElementById('reb-area').value = oldArea;
+                    calcReboco();
+                }
+            }
             
             // Notify user
             const btn = document.getElementById(`btn-add-${category}`);
@@ -1071,16 +1125,88 @@
         }
 
         // ===== ALVENARIA =====
+        function renderAlvenariaParedes() {
+            const container = document.getElementById('alv-walls-container');
+            container.innerHTML = '';
+            let totalArea = 0;
+
+            window.AlvenariaParedes.forEach((p, idx) => {
+                const area = (parseFloat(p.comp) || 0) * (parseFloat(p.alt) || 0);
+                totalArea += area;
+
+                container.innerHTML += `
+                    <div class="grid grid-cols-12 gap-2 bg-slate-50 p-2 rounded-lg border border-slate-200 items-end">
+                        <div class="col-span-12 md:col-span-5 relative">
+                            <span class="absolute -top-2 -left-2 bg-blue-600 text-white text-[10px] w-5 h-5 flex items-center justify-center rounded-full font-bold shadow-sm">${idx + 1}</span>
+                            <label class="lbl text-[10px] ml-1">Nome</label>
+                            <input type="text" value="${p.nome}" oninput="updateAlvenariaParede(${idx}, 'nome', this.value)" placeholder="Ref..." class="inp py-1 px-2 text-sm" />
+                        </div>
+                        <div class="col-span-5 md:col-span-3">
+                            <label class="lbl text-[10px]">Comp (m)</label>
+                            <input type="number" min="0" step="0.01" value="${p.comp}" oninput="updateAlvenariaParede(${idx}, 'comp', this.value)" class="inp py-1 px-2 text-sm" placeholder="Ex: 5" />
+                        </div>
+                        <div class="col-span-5 md:col-span-3">
+                            <label class="lbl text-[10px]">Alt (m)</label>
+                            <input type="number" min="0" step="0.01" value="${p.alt}" oninput="updateAlvenariaParede(${idx}, 'alt', this.value)" class="inp py-1 px-2 text-sm" placeholder="Ex: 3" />
+                        </div>
+                        <div class="col-span-2 md:col-span-1 flex justify-end pb-1">
+                            <button onclick="removeAlvenariaParede(${idx})" class="text-red-400 hover:text-red-600 transition-colors p-1" title="Remover Parede">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            const badge = document.getElementById('alv-total-area-badge');
+            if (totalArea > 0) {
+                badge.textContent = `Total: ${fmt(totalArea)} m²`;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+        }
+
+        function addAlvenariaParede() {
+            window.AlvenariaParedes.push({ nome: `Parede ${window.AlvenariaParedes.length + 1}`, comp: '', alt: '' });
+            renderAlvenariaParedes();
+            calcAlvenaria();
+        }
+
+        function removeAlvenariaParede(idx) {
+            if (window.AlvenariaParedes.length > 1) {
+                window.AlvenariaParedes.splice(idx, 1);
+                renderAlvenariaParedes();
+                calcAlvenaria();
+            }
+        }
+
+        function updateAlvenariaParede(idx, field, value) {
+            window.AlvenariaParedes[idx][field] = value;
+            calcAlvenaria();
+            
+            let totalArea = 0;
+            window.AlvenariaParedes.forEach(p => totalArea += (parseFloat(p.comp) || 0) * (parseFloat(p.alt) || 0));
+            const badge = document.getElementById('alv-total-area-badge');
+            if (totalArea > 0) {
+                badge.textContent = `Total: ${fmt(totalArea)} m²`;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+        }
+
         function calcAlvenaria() {
-            const comp = v('alv-comp'), alt = v('alv-alt');
+            let area = 0;
+            window.AlvenariaParedes.forEach(p => area += (parseFloat(p.comp) || 0) * (parseFloat(p.alt) || 0));
+
             const el = document.getElementById('res-alvenaria');
             const moMode = sv('alv-mo-mode');
 
             document.getElementById('alv-mo-diaria-box').classList.toggle('hidden', moMode !== 'diaria');
             document.getElementById('alv-mo-emp-box').classList.toggle('hidden', moMode !== 'empreitada');
 
-            if (!comp || !alt) { el.innerHTML = '<p class="text-slate-400 text-center text-sm">Preencha comprimento e altura.</p>'; return; }
-            const area = comp * alt;
+            if (!area || area <= 0) { el.innerHTML = '<p class="text-slate-400 text-center text-sm">Adicione paredes com comprimento e altura maiores que zero para ver os resultados.</p>'; return; }
 
             const tipoVal = sv('alv-tipo');
             const pM2Std = { ceramico6: 35, ceramico8: 20, macico: 65, bloco_concreto: 13 };
@@ -1131,8 +1257,16 @@
             }
             const totalMO = cProf + cServ, total = totalMat + totalMO;
 
+            const incChap = document.getElementById('alv-include-chapisco').checked;
+            const incReb = document.getElementById('alv-include-reboco').checked;
+
+            R.alvenaria = { 
+                area, qtdTij, tijoloNome, tracoLabel, sacosCim, areia, cTj, cCim, cAreia, totalMat, profQty, profVal, servQty, servVal, rendMO, dias, cProf, cServ, totalMO, total, moMode, valEmp,
+                _includeChapisco: incChap, _includeReboco: incReb, paredes: JSON.parse(JSON.stringify(window.AlvenariaParedes))
+            };
+
             const items = [
-                { label: 'Área da parede', value: fmt(area), unit: 'm²' },
+                { label: 'Área total (Paredes somadas)', value: fmt(area), unit: 'm²' },
                 { label: `${tijoloNome} (traço ${tracoLabel})`, value: qtdTij.toLocaleString('pt-BR'), unit: 'unid.', cost: cTj || 0 },
                 { label: 'Sacos de Cimento 50kg', value: sacosCim, unit: 'sacos', cost: cCim || 0 },
                 { label: 'Areia', value: fmt(areia, 3), unit: 'm³', cost: cAreia || 0 },
@@ -1144,8 +1278,10 @@
                 if (profQty > 0 && profVal > 0) items.push({ label: `Pedreiro (${profQty}×R$${fmt(profVal)}×${dias}d)`, value: fmt(cProf, 2), unit: 'R$', cost: cProf });
                 if (servQty > 0 && servVal > 0) items.push({ label: `Servente (${servQty}×R$${fmt(servVal)}×${dias}d)`, value: fmt(cServ, 2), unit: 'R$', cost: cServ });
             }
+            
+            if (incChap) items.push({ label: '➕ Inclui Chapisco Autom.', value: '1 face', unit: '', cost: null });
+            if (incReb) items.push({ label: '➕ Inclui Reboco Autom.', value: '2 faces', unit: '', cost: null });
 
-            R.alvenaria = { area, qtdTij, tijoloNome, tracoLabel, sacosCim, areia, cTj, cCim, cAreia, totalMat, profQty, profVal, servQty, servVal, rendMO, dias, cProf, cServ, totalMO, total, moMode, valEmp };
             el.innerHTML = resultHTML('Resultado — Alvenaria', '🧱', items, total, 'alvenaria');
         }
 
@@ -1293,26 +1429,133 @@
         }
 
         // ===== CONCRETO =====
+        function getConLabel(tipo, d) {
+            if (tipo === 'laje') return d === 1 ? 'Larg(m)' : (d === 2 ? 'Comp(m)' : 'Espess(m)');
+            return d === 1 ? 'Larg(m)' : (d === 2 ? 'Alt(m)' : 'Comp(m)');
+        }
+
+        function renderConcretoPecas() {
+            const container = document.getElementById('con-pieces-container');
+            container.innerHTML = '';
+            let totalVol = 0;
+
+            window.ConcretoPecas.forEach((p, idx) => {
+                const q = parseFloat(p.qty) || 0;
+                const d1 = parseFloat(p.cDim1) || 0;
+                const d2 = parseFloat(p.cDim2) || 0;
+                const d3 = parseFloat(p.cDim3) || 0;
+                const vol = q * d1 * d2 * d3;
+                totalVol += vol;
+
+                container.innerHTML += `
+                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 relative mb-2">
+                        <span class="absolute -top-2 -left-2 bg-blue-600 text-white text-[10px] w-5 h-5 flex items-center justify-center rounded-full font-bold shadow-sm">${idx + 1}</span>
+                        
+                        <div class="flex justify-between items-start mb-2 pl-2">
+                            <div class="flex gap-2 w-full pr-4">
+                                <select onchange="updateConcretoPeca(${idx}, 'tipo', this.value)" class="inp py-1 px-2 text-xs w-1/3 min-w-[80px]">
+                                    <option value="pilar" ${p.tipo==='pilar'?'selected':''}>Pilar</option>
+                                    <option value="viga" ${p.tipo==='viga'?'selected':''}>Viga</option>
+                                    <option value="laje" ${p.tipo==='laje'?'selected':''}>Laje</option>
+                                </select>
+                                <input type="text" value="${p.nome}" oninput="updateConcretoPeca(${idx}, 'nome', this.value)" placeholder="Ref. da Peça" class="inp py-1 px-2 text-xs w-2/3" />
+                            </div>
+                            <button onclick="removeConcretoPeca(${idx})" class="text-red-400 hover:text-red-600 transition-colors p-1" title="Remover Peça">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
+                            </button>
+                        </div>
+
+                        <div class="grid grid-cols-4 gap-2 pl-2">
+                            <div>
+                                <label class="lbl text-[10px] truncate" title="Quantidade">Qtd</label>
+                                <input type="number" min="1" step="1" value="${p.qty}" oninput="updateConcretoPeca(${idx}, 'qty', this.value)" class="inp py-1 px-1 text-xs text-center" />
+                            </div>
+                            <div>
+                                <label class="lbl text-[10px] truncate" title="${getConLabel(p.tipo, 1)}">${getConLabel(p.tipo, 1)}</label>
+                                <input type="number" min="0" step="0.01" value="${p.cDim1}" oninput="updateConcretoPeca(${idx}, 'cDim1', this.value)" class="inp py-1 px-1 text-xs text-center" />
+                            </div>
+                            <div>
+                                <label class="lbl text-[10px] truncate" title="${getConLabel(p.tipo, 2)}">${getConLabel(p.tipo, 2)}</label>
+                                <input type="number" min="0" step="0.01" value="${p.cDim2}" oninput="updateConcretoPeca(${idx}, 'cDim2', this.value)" class="inp py-1 px-1 text-xs text-center" />
+                            </div>
+                            <div>
+                                <label class="lbl text-[10px] truncate" title="${getConLabel(p.tipo, 3)}">${getConLabel(p.tipo, 3)}</label>
+                                <input type="number" min="0" step="0.01" value="${p.cDim3}" oninput="updateConcretoPeca(${idx}, 'cDim3', this.value)" class="inp py-1 px-1 text-xs text-center" />
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            const badge = document.getElementById('con-total-vol-badge');
+            if (totalVol > 0) {
+                badge.textContent = `Total: ${fmt(totalVol, 3)} m³`;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+        }
+
+        function addConcretoPeca() {
+            window.ConcretoPecas.push({ tipo: 'viga', nome: `Viga ${window.ConcretoPecas.length + 1}`, qty: 1, cDim1: '', cDim2: '', cDim3: '' });
+            renderConcretoPecas();
+            calcConcreto();
+        }
+
+        function removeConcretoPeca(idx) {
+            if (window.ConcretoPecas.length > 1) {
+                window.ConcretoPecas.splice(idx, 1);
+                renderConcretoPecas();
+                calcConcreto();
+            }
+        }
+
+        function updateConcretoPeca(idx, field, value) {
+            window.ConcretoPecas[idx][field] = value;
+            if (field === 'tipo') {
+                renderConcretoPecas(); // Re-render to update labels
+            }
+            calcConcreto();
+            
+            let totalVol = 0;
+            window.ConcretoPecas.forEach(p => {
+                totalVol += (parseFloat(p.qty)||0) * (parseFloat(p.cDim1)||0) * (parseFloat(p.cDim2)||0) * (parseFloat(p.cDim3)||0);
+            });
+            const badge = document.getElementById('con-total-vol-badge');
+            if (totalVol > 0) {
+                badge.textContent = `Total: ${fmt(totalVol, 3)} m³`;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+        }
+
+        function conFckChange() {
+            const fck = sv('con-fck');
+            document.getElementById('con-traco-custom-box').classList.toggle('hidden', fck !== 'custom');
+            calcConcreto();
+        }
+
         function calcConcreto() {
-            const tipo = sv('con-tipo'), fck = sv('con-fck');
-            const d1 = v('con-d1'), d2 = v('con-d2'), d3 = v('con-d3');
+            let volRaw = 0;
+            window.ConcretoPecas.forEach(p => {
+                volRaw += (parseFloat(p.qty)||0) * (parseFloat(p.cDim1)||0) * (parseFloat(p.cDim2)||0) * (parseFloat(p.cDim3)||0);
+            });
+
+            const fck = sv('con-fck');
             const el = document.getElementById('res-concreto');
             const moMode = sv('con-mo-mode');
 
             document.getElementById('con-mo-diaria-box').classList.toggle('hidden', moMode !== 'diaria');
             document.getElementById('con-mo-emp-box').classList.toggle('hidden', moMode !== 'empreitada');
 
-            const lbs = { viga: ['Largura (m)', 'Altura (m)', 'Comprimento (m)'], pilar: ['Largura (m)', 'Profundidade (m)', 'Altura (m)'], laje: ['Comprimento (m)', 'Largura (m)', 'Espessura (m)'] };
-            ['con-label1', 'con-label2', 'con-label3'].forEach((id, i) => document.getElementById(id).textContent = lbs[tipo][i]);
-            if (!d1 || !d2 || !d3) { el.innerHTML = '<p class="text-slate-400 text-center text-sm">Preencha as dimensões.</p>'; return; }
-            const vol = d1 * d2 * d3 * LOSS;
+            if (!volRaw || volRaw <= 0) { el.innerHTML = '<p class="text-slate-400 text-center text-sm">Adicione peças com dimensões maiores que zero.</p>'; return; }
+            const vol = volRaw * LOSS;
 
             let c;
             if (fck === 'custom') {
                 const trC = v('con-tr-c'), trA = v('con-tr-a'), trB = v('con-tr-b');
-                // Estimativa simples baseada na soma das partes (traço de obra ~1400kg/m3 areia, 1500kg/m3 brita)
-                // Cimento ~350kg/m3 é padrão base.
-                c = { cimento: 350, areia: 350 * trA, brita: 350 * trB, nome: `Personalizado ${trC}:${trA}:${trB}` };
+                c = { cimento: 350, areia: 350 * trA, brita: 350 * trB, nome: `Custom ${trC}:${trA}:${trB}` };
             } else {
                 const consumos = {
                     '20': { cimento: 320, areia: 800, brita: 1120, nome: 'C20 (1:2.5:3.5)' },
@@ -1339,8 +1582,9 @@
             if (diasEl) diasEl.value = dias;
 
             let cProf, cServ;
+            const valEmp = v('con-mo-emp-val');
             if (moMode === 'empreitada') {
-                cProf = (vol / LOSS) * v('con-mo-emp-val');
+                cProf = volRaw * valEmp;
                 cServ = 0;
             } else {
                 cProf = profQty * profVal * dias;
@@ -1350,16 +1594,18 @@
 
             R.concreto = {
                 fck: c.nome, vol, sacosCim, areia, brita, cCim, cAreia, cBrita, totalMat,
-                profQty, profVal, servQty, servVal, rendMO, dias, cProf, cServ, total, moMode, valEmp: v('con-mo-emp-val')
+                profQty, profVal, servQty, servVal, rendMO, dias, cProf, cServ, total, moMode, valEmp,
+                pecas: JSON.parse(JSON.stringify(window.ConcretoPecas))
             };
+
             const items = [
-                { label: 'Volume de concreto', value: fmt(vol, 3), unit: 'm³' },
+                { label: 'Volume total c/ margem', value: fmt(vol, 3), unit: 'm³' },
                 { label: 'Sacos de Cimento (50kg)', value: sacosCim, unit: 'sacos', cost: cCim || 0 },
                 { label: 'Areia', value: fmt(areia, 3), unit: 'm³', cost: cAreia || 0 },
                 { label: 'Brita', value: fmt(brita, 3), unit: 'm³', cost: cBrita || 0 },
             ];
             if (moMode === 'empreitada') {
-                if (v('con-mo-emp-val') > 0) items.push({ label: `🔨 Empreitada (R$ ${fmt(v('con-mo-emp-val'))}/m³)`, value: fmt(cProf, 2), unit: 'R$' });
+                if (valEmp > 0) items.push({ label: `🔨 Empreitada (R$ ${fmt(valEmp)}/m³)`, value: fmt(cProf, 2), unit: 'R$' });
             } else {
                 if (profQty > 0 && profVal > 0) items.push({ label: `👷 Pedreiro (${profQty}×R$${fmt(profVal, 2)}×${dias}d)`, value: fmt(cProf, 2), unit: 'R$' });
                 if (servQty > 0 && servVal > 0) items.push({ label: `🧹 Servente (${servQty}×R$${fmt(servVal, 2)}×${dias}d)`, value: fmt(cServ, 2), unit: 'R$' });
@@ -1731,6 +1977,12 @@
                 navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW error:', err));
             });
         }
+        
+        // Initialize dynamic lists on load
+        window.addEventListener('DOMContentLoaded', () => {
+            renderAlvenariaParedes();
+            renderConcretoPecas();
+        });
     </script>
 </body>
 
