@@ -1007,43 +1007,29 @@
             // Auto-include Chapisco & Reboco if coming from Alvenaria
             if (category === 'alvenaria') {
                 if (item._includeChapisco) {
-                    // Force a recalculation of Chapisco with Alvenaria's area first
-                    const oldArea = document.getElementById('cha-area').value;
-                    document.getElementById('cha-area').value = item.area;
-                    calcChapisco();
-                    
+                    // It was already calculated inside calcAlvenaria and R.chapisco is fresh
                     if (R.chapisco) {
                         const chapItem = JSON.parse(JSON.stringify(R.chapisco));
                         chapItem._category = 'chapisco';
                         chapItem._title = titles.chapisco.title;
                         chapItem._icon = titles.chapisco.icon;
                         const chapCount = window.Orcamento.filter(i => i._category === 'chapisco').length + 1;
-                        chapItem._displayName = `${chapItem._title} ${chapCount} (Autogerado da ${item._displayName})`;
+                        chapItem._displayName = `${chapItem._title} ${chapCount} (De: ${item._displayName})`;
                         window.Orcamento.push(chapItem);
                     }
-                    // restore previous input
-                    document.getElementById('cha-area').value = oldArea;
-                    calcChapisco();
                 }
                 
                 if (item._includeReboco) {
-                    // Automate Reboco calculation (assuming 2 sides of the wall)
-                    const oldArea = document.getElementById('reb-area').value;
-                    document.getElementById('reb-area').value = item.area * 2;
-                    calcReboco();
-                    
+                    // It was already calculated inside calcAlvenaria and R.reboco is fresh
                     if (R.reboco) {
                         const rebItem = JSON.parse(JSON.stringify(R.reboco));
                         rebItem._category = 'reboco';
                         rebItem._title = titles.reboco.title;
                         rebItem._icon = titles.reboco.icon;
                         const rebCount = window.Orcamento.filter(i => i._category === 'reboco').length + 1;
-                        rebItem._displayName = `${rebItem._title} ${rebCount} (Autogerado da ${item._displayName} - 2 faces)`;
+                        rebItem._displayName = `${rebItem._title} ${rebCount} (De: ${item._displayName})`;
                         window.Orcamento.push(rebItem);
                     }
-                    // restore previous input
-                    document.getElementById('reb-area').value = oldArea;
-                    calcReboco();
                 }
             }
             
@@ -1279,9 +1265,40 @@
                 if (servQty > 0 && servVal > 0) items.push({ label: `Servente (${servQty}×R$${fmt(servVal)}×${dias}d)`, value: fmt(cServ, 2), unit: 'R$', cost: cServ });
             }
             
-            if (incChap) items.push({ label: '➕ Inclui Chapisco Autom.', value: '1 face', unit: '', cost: null });
-            if (incReb) items.push({ label: '➕ Inclui Reboco Autom.', value: '2 faces', unit: '', cost: null });
+            if (incChap) {
+                // Sync necessary fields to Chapisco before calculating
+                document.getElementById('cha-area').value = area;
+                document.getElementById('cha-mo-mode').value = moMode;
+                document.getElementById('cha-mo-prof-qty').value = profQty;
+                document.getElementById('cha-mo-prof-val').value = profVal;
+                document.getElementById('cha-mo-serv-qty').value = servQty;
+                document.getElementById('cha-mo-serv-val').value = servVal;
+                document.getElementById('cha-p-cim').value = v('alv-p-cim');
+                document.getElementById('cha-p-areia').value = v('alv-p-areia');
+                calcChapisco(); // This updates R.chapisco
+                
+                const cTotal = R.chapisco ? R.chapisco.total : 0;
+                total += cTotal;
+                items.push({ label: `➕ Chapisco (${moMode}) - 1 face`, value: fmt(area), unit: 'm²', cost: cTotal });
+            }
+            if (incReb) {
+                // Sync necessary fields to Reboco before calculating
+                document.getElementById('reb-area').value = area * 2; // Reboco assumes 2 faces
+                document.getElementById('reb-mo-mode').value = moMode;
+                document.getElementById('reb-mo-prof-qty').value = profQty;
+                document.getElementById('reb-mo-prof-val').value = profVal;
+                document.getElementById('reb-mo-serv-qty').value = servQty;
+                document.getElementById('reb-mo-serv-val').value = servVal;
+                document.getElementById('reb-p-cim').value = v('alv-p-cim');
+                document.getElementById('reb-p-areia').value = v('alv-p-areia');
+                calcReboco(); // This updates R.reboco
+                
+                const rTotal = R.reboco ? R.reboco.total : 0;
+                total += rTotal;
+                items.push({ label: `➕ Reboco (${moMode}) - 2 faces`, value: fmt(area * 2), unit: 'm²', cost: rTotal });
+            }
 
+            R.alvenaria.total_c_agregados = total; // Save combined total
             el.innerHTML = resultHTML('Resultado — Alvenaria', '🧱', items, total, 'alvenaria');
         }
 
@@ -1318,7 +1335,13 @@
 
             let cProf, cServ;
             if (moMode === 'empreitada') {
-                cProf = area * v('cha-mo-emp-val');
+                let chaEmp = v('cha-mo-emp-val');
+                if (!chaEmp) {
+                    chaEmp = 5.00;
+                    const empInput = document.getElementById('cha-mo-emp-val');
+                    if (empInput) empInput.value = chaEmp;
+                }
+                cProf = area * chaEmp;
                 cServ = 0;
             } else {
                 cProf = profQty * profVal * dias;
@@ -1399,7 +1422,13 @@
 
             let cProf, cServ;
             if (moMode === 'empreitada') {
-                cProf = area * v('reb-mo-emp-val');
+                let rebEmp = v('reb-mo-emp-val');
+                if (!rebEmp) {
+                    rebEmp = 25.00;
+                    const empInput = document.getElementById('reb-mo-emp-val');
+                    if (empInput) empInput.value = rebEmp;
+                }
+                cProf = area * rebEmp;
                 cServ = 0;
             } else {
                 cProf = profQty * profVal * dias;
